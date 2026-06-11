@@ -1,0 +1,82 @@
+/* ════════════════════════════════════════════════
+   謙謙爸工具箱 — 共用主題系統
+   所有工具引用此檔案，勿直接修改個別工具的 CSS variables
+   ════════════════════════════════════════════════ */
+
+:root {
+  --phase-0: #e0b454;
+  --phase-1: #cf8a48;
+  --phase-2: #54c2a2;
+  --phase-3: #86a6da;
+  --phase-4: #b988dc;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+:root, [data-theme="dark"] {
+    --bg: #0e0d0b;
+    --bg2: #14120f;
+    --surface: #1a1916;
+    --surface-hi: #201e1a;
+    --surface2: #242220;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f3f0e9;
+    --muted: #8b8680;
+    --muted2: #6b6660;
+    --amber: #e0b454;
+    --amber-dim: #8a6e2a;
+    --amber-glow: rgba(224,180,84,0.15);
+    --teal: #54c2a2;
+    --teal-dim: #2a6e56;
+    --purple: #b988dc;
+    --blue: #86a6da;
+    --on-accent: #15120c;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.35);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  
+    --red: #e86756;
+    --scrim: rgba(8,7,6,0.75);
+}
+
+[data-theme="light"] {
+    --bg: #f4efe3;
+    --bg2: #efe8d8;
+    --surface: #fffdf8;
+    --surface-hi: #fffefb;
+    --surface2: #f1ebdd;
+    --border: rgba(58,44,20,0.10);
+    --border2: rgba(58,44,20,0.18);
+    --text: #2c2418;
+    --muted: #7c7160;
+    --muted2: #a39884;
+    --amber: #a9761c;
+    --amber-dim: #cba656;
+    --amber-glow: rgba(169,118,28,0.14);
+    --teal: #2c8e72;
+    --teal-dim: #95c8b8;
+    --purple: #7c3fa8;
+    --blue: #3a5fa8;
+    --on-accent: #fffdf8;
+    --shadow-sm: 0 1px 3px rgba(70,52,22,0.08);
+    --shadow-md: 0 10px 30px rgba(70,52,22,0.12);
+    --shadow-lg: 0 22px 60px rgba(70,52,22,0.18);
+  
+    --red: #c0432f;
+    --scrim: rgba(238,231,216,0.75);
+}
+
+/* ── 共用元件：主題切換按鈕 ── */
+.theme-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 9px;
+  padding: 8px 11px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--muted);
+  transition: all 0.2s var(--ease);
+  flex-shrink: 0;
+}
+.theme-btn:hover { color: var(--text); background: var(--surface-hi); }

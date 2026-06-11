@@ -2,6 +2,7 @@
 <html lang="zh-TW" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; worker-src 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>謙謙爸工具箱</title>
 <meta name="description" content="為思考而造的小工具集合">
@@ -14,61 +15,13 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./theme.css">
 <style>
   :root {
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-
-  :root, [data-theme="dark"] {
-    --bg: #0e0d0b;
-    --bg2: #14120f;
-    --surface: #1a1916;
-    --surface-hi: #201e1a;
-    --surface2: #242220;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f3f0e9;
-    --muted: #8b8680;
-    --muted2: #6b6660;
-    --amber: #e0b454;
-    --amber-dim: #8a6e2a;
-    --amber-glow: rgba(224,180,84,0.15);
-    --teal: #54c2a2;
-    --teal-dim: #2a6e56;
-    --purple: #b988dc;
-    --blue: #86a6da;
-    --on-accent: #15120c;
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
-    --shadow-md: 0 8px 30px rgba(0,0,0,0.35);
-    --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
-  }
-
-  [data-theme="light"] {
-    --bg: #f4efe3;
-    --bg2: #efe8d8;
-    --surface: #fffdf8;
-    --surface-hi: #fffefb;
-    --surface2: #f1ebdd;
-    --border: rgba(58,44,20,0.10);
-    --border2: rgba(58,44,20,0.18);
-    --text: #2c2418;
-    --muted: #7c7160;
-    --muted2: #a39884;
-    --amber: #a9761c;
-    --amber-dim: #cba656;
-    --amber-glow: rgba(169,118,28,0.14);
-    --teal: #2c8e72;
-    --teal-dim: #95c8b8;
-    --purple: #7c3fa8;
-    --blue: #3a5fa8;
-    --on-accent: #fffdf8;
-    --shadow-sm: 0 1px 3px rgba(70,52,22,0.08);
-    --shadow-md: 0 10px 30px rgba(70,52,22,0.12);
-    --shadow-lg: 0 22px 60px rgba(70,52,22,0.18);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background: var(--bg);
@@ -124,19 +77,6 @@
     line-height: 1.5;
   }
 
-  .theme-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 9px;
-    padding: 8px 11px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--muted);
-    transition: all 0.2s var(--ease);
-    flex-shrink: 0;
-    margin-top: 4px;
-  }
-  .theme-btn:hover { color: var(--text); background: var(--surface-hi); }
 
   /* DIVIDER */
   .divider {
@@ -303,7 +243,7 @@
       <h1>為思考而造<br>的小工具</h1>
       <p class="brand-sub">每一個工具，解決一個真實問題。</p>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()" title="切換主題">☀︎</button>
+    <button class="theme-btn" id="themeBtn" title="切換主題">☀︎</button>
   </div>
 </header>
 
@@ -377,6 +317,7 @@
   mbindividual-dad-of-Ken · 工具只做一件事，做好一件事
 </footer>
 
+<script src="./toolbox-utils.js"></script>
 <script>
   /* ════════════════ 簽名保護區 ── 任何版本迭代必須原樣保留本區塊 ⚠️
    SIG.a = 作者署名（Base64，執行期由 sigA() 解碼）
@@ -391,13 +332,11 @@
   var APP_AUTHOR=sigA();
   /* ════════════════ 簽名保護區結束 ════════════════ */
 
-  function toggleTheme() {
-    const html = document.documentElement;
-    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', next);
-    localStorage.setItem('tbx-theme', next);
-    document.querySelector('.theme-btn').textContent = next === 'dark' ? '☀︎' : '☾';
-  }
+  function toggleTheme() { TbxTheme.toggle(); }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+  });
 
   // restore saved theme
   const saved = localStorage.getItem('tbx-theme');

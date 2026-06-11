@@ -2,6 +2,7 @@
 <html lang="zh-TW" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; worker-src 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>策略思考引導器 · 謙謙爸工具箱</title>
 <meta name="description" content="15 分鐘策略思考引導器：先問對的問題，再決定做什麼">
@@ -12,47 +13,9 @@
 <meta name="theme-color" content="#0e0d0b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../theme.css">
 <style>
-  :root {
-    --phase-0: #e0b454;
-    --phase-1: #54c2a2;
-    --phase-2: #86a6da;
-    --phase-3: #b988dc;
-    --ease: cubic-bezier(0.22, 1, 0.36, 1);
-    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  :root, [data-theme="dark"] {
-    --bg: #0e0d0b; --bg2: #14120f;
-    --surface: #1a1916; --surface-hi: #201e1a; --surface2: #242220;
-    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.14);
-    --text: #f3f0e9; --muted: #8b8680; --muted2: #6b6660;
-    --amber: #e0b454; --amber-dim: #8a6e2a; --amber-glow: rgba(224,180,84,0.15);
-    --teal: #54c2a2; --teal-dim: #2a6e56;
-    --red: #e86756;
-    --on-accent: #15120c;
-    --scrim: rgba(8,7,6,0.75);
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
-    --shadow-md: 0 8px 30px rgba(0,0,0,0.35);
-    --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
-  }
-
-  [data-theme="light"] {
-    --bg: #f4efe3; --bg2: #efe8d8;
-    --surface: #fffdf8; --surface-hi: #fffefb; --surface2: #f1ebdd;
-    --border: rgba(58,44,20,0.10); --border2: rgba(58,44,20,0.18);
-    --text: #2c2418; --muted: #7c7160; --muted2: #a39884;
-    --amber: #a9761c; --amber-dim: #cba656; --amber-glow: rgba(169,118,28,0.14);
-    --teal: #2c8e72; --teal-dim: #95c8b8;
-    --red: #c0432f;
-    --on-accent: #fffdf8;
-    --scrim: rgba(238,231,216,0.75);
-    --shadow-sm: 0 1px 3px rgba(70,52,22,0.08);
-    --shadow-md: 0 10px 30px rgba(70,52,22,0.12);
-    --shadow-lg: 0 22px 60px rgba(70,52,22,0.18);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background: var(--bg);
@@ -511,7 +474,7 @@
 <div class="topbar">
   <a class="back-link" href="../">← 工具箱</a>
   <span class="topbar-title">策略思考引導器</span>
-  <button class="theme-btn" onclick="toggleTheme()">☀︎</button>
+  <button class="theme-btn" id="themeBtn">☀︎</button>
 </div>
 
 <main>
@@ -524,10 +487,10 @@
 
   <div class="setup-field">
     <label for="topicInput">這次要思考的主題</label>
-    <input id="topicInput" type="text" placeholder="例：Q3 工作計畫、要不要推動 X 專案…" oninput="checkSetup()">
+    <input id="topicInput" type="text" placeholder="例：Q3 工作計畫、要不要推動 X 專案…" id="topicInput">
   </div>
 
-  <button class="start-btn" id="startBtn" onclick="startApp()" disabled>開始思考 →</button>
+  <button class="start-btn" id="startBtn" id="startBtn" disabled>開始思考 →</button>
 </div>
 
 <!-- APP -->
@@ -553,8 +516,8 @@
   </div>
 
   <div class="timer-ctrl">
-    <button class="ctrl-btn primary" id="timerBtn" onclick="toggleTimer()">▶ 開始計時</button>
-    <button class="ctrl-btn" onclick="resetTimer()">↺ 重設</button>
+    <button class="ctrl-btn primary" id="timerBtn" id="timerBtn">▶ 開始計時</button>
+    <button class="ctrl-btn" id="resetBtn">↺ 重設</button>
   </div>
 
   <div style="height:1.25rem"></div>
@@ -573,14 +536,15 @@
   <div id="summaryCards"></div>
 
   <div class="summary-btns">
-    <button class="copy-btn" onclick="copyMarkdown()">複製 Markdown ↗</button>
-    <button class="restart-btn" onclick="restart()">開始新一輪</button>
+    <button class="copy-btn" id="copyBtn">複製 Markdown ↗</button>
+    <button class="restart-btn" id="restartBtn">開始新一輪</button>
   </div>
   <div style="height:2rem"></div>
 </div>
 
 </main>
 
+<script src="../toolbox-utils.js"></script>
 <script>
   /* ════════════════ 簽名保護區 ── 任何版本迭代必須原樣保留本區塊 ⚠️
    SIG.a = 作者署名（Base64，執行期由 sigA() 解碼）
@@ -594,6 +558,7 @@
   function sigK(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h.toString(36);}
   var APP_AUTHOR=sigA();
   /* ════════════════ 簽名保護區結束 ════════════════ */
+
 
 // ── DATA ──────────────────────────────────────────────────
 const PHASES = [
@@ -655,8 +620,7 @@ let notes = {};         // { phaseIndex: { key: value } }
 let priorityItems = []; // ['', '', '', '', '']
 let selectedPriority = -1;
 let selectedEmo = null;
-let timerInterval = null;
-let timerRunning = false;
+let _timer = null;
 let timerSec = 0;
 let timerTotal = 0;
 
@@ -686,7 +650,7 @@ function startApp() {
 // ── TIMELINE ──────────────────────────────────────────────
 function buildTimeline() {
   const tl = document.getElementById('timeline');
-  tl.innerHTML = PHASES.map((p, i) => `<div class="tl-seg" data-i="${i}" onclick="jumpTo(${i})" title="${p.title}"></div>`).join('');
+  tl.innerHTML = PHASES.map((p, i) => `<div class="tl-seg" data-i="${i}" data-jump="${i}" title="${p.title}"></div>`).join('');
 }
 
 function markTimelineDone(i) {
@@ -698,7 +662,7 @@ function buildPhases() {
   const container = document.getElementById('phases');
   container.innerHTML = PHASES.map((p, i) => `
     <div class="phase-card" id="pc${i}" style="--phase-color:${p.color};--phase-glow:${p.glow}">
-      <div class="phase-head" onclick="toggleExpand(${i})">
+      <div class="phase-head" data-expand="${i}">
         <div class="phase-badge">${i+1}</div>
         <div class="phase-head-info">
           <div class="phase-head-title">${p.title}</div>
@@ -708,7 +672,7 @@ function buildPhases() {
       </div>
       <div class="phase-body" id="pb${i}">
         ${buildPhaseBody(p, i)}
-        <button class="phase-next" id="pnext${i}" onclick="nextPhase(${i})" disabled>
+        <button class="phase-next" id="pnext${i}" data-next="${i}" disabled>
           ${i < PHASES.length - 1 ? '完成，進下一階段 →' : '完成思考，查看結果 ✓'}
         </button>
       </div>
@@ -723,7 +687,7 @@ function buildPhaseBody(p, i) {
   if (p.type === 'emotion') {
     return `
       <div class="emo-grid">
-        ${EMOTIONS.map(e => `<button class="emo-btn" onclick="selectEmo(this,'${e.val}','${(e.msg||'').replace(/'/g,"&#39;")}')">${e.label}</button>`).join('')}
+        ${EMOTIONS.map(e => `<button class="emo-btn" data-val="${e.val}" data-msg="${e.msg||''}">${e.label}</button>`).join('')}
       </div>
       <div class="emo-warn" id="emoWarn"></div>
     `;
@@ -741,7 +705,7 @@ function buildPhaseBody(p, i) {
         <div class="sfield-hint">${f.hint}</div>
         <textarea class="sfield-textarea" rows="2"
           placeholder="${f.placeholder}"
-          oninput="saveNote(${i},'${f.key}',this.value);checkNext(${i})"
+          data-phase="${i}" data-key="${f.key}"
           id="f${i}_${f.key}"></textarea>
       </div>
     `).join('')}</div>`;
@@ -755,10 +719,10 @@ function renderPriorityItems() {
   list.innerHTML = priorityItems.map((v, i) => `
     <div class="priority-item ${selectedPriority===i?'selected-item':''} ${selectedPriority>=0&&selectedPriority!==i?'deprioritized':''}" id="pi${i}">
       <textarea rows="1" placeholder="選項 ${i+1}…"
-        oninput="priorityItems[${i}]=this.value;checkNext(2)"
-        onfocus="this.style.minHeight='22px'"
+        data-pidx="${i}"
+        class="priority-ta"
       >${v}</textarea>
-      <div class="priority-pick" onclick="pickPriority(${i})" title="選為最優先">
+      <div class="priority-pick" data-pick="${i}" title="選為最優先">
         ${selectedPriority===i ? '✓' : ''}
       </div>
     </div>
@@ -861,39 +825,36 @@ function selectEmo(btn, val, msg) {
 
 // ── TIMER ─────────────────────────────────────────────────
 function toggleTimer() {
-  if (timerRunning) pauseTimer(); else startTimer();
+  if (_timer && _timer.isRunning()) pauseTimer(); else startTimer();
 }
 
 function startTimer() {
-  if (timerSec <= 0) { timerSec = PHASES[currentPhase].mins * 60; }
-  timerRunning = true;
+  if (!_timer) {
+    _timer = TbxTimer({
+      onTick: (s, t) => { timerSec = s; timerTotal = t; renderTimer(); },
+      onEnd: () => { document.getElementById('arcTime').textContent = '00:00'; clearTimer(); }
+    });
+  }
+  if (timerSec <= 0) timerSec = PHASES[currentPhase].mins * 60;
+  _timer.start(timerSec);
   document.getElementById('timerBtn').textContent = '⏸ 暫停';
-  timerInterval = setInterval(() => {
-    timerSec--;
-    renderTimer();
-    if (timerSec <= 0) {
-      clearTimer();
-      document.getElementById('arcTime').textContent = '00:00';
-    }
-  }, 1000);
 }
 
 function pauseTimer() {
-  timerRunning = false;
+  if (_timer) _timer.pause();
   document.getElementById('timerBtn').textContent = '▶ 繼續';
-  clearInterval(timerInterval);
 }
 
 function resetTimer() {
   clearTimer();
   timerSec = PHASES[currentPhase].mins * 60;
   timerTotal = timerSec;
+  if (_timer) _timer.reset(timerSec);
   renderTimer();
 }
 
 function clearTimer() {
-  timerRunning = false;
-  clearInterval(timerInterval);
+  if (_timer) { _timer.stop(); _timer = null; }
   document.getElementById('timerBtn').textContent = '▶ 開始計時';
 }
 
@@ -1008,19 +969,64 @@ function restart() {
 }
 
 // ── THEME ─────────────────────────────────────────────────
-function toggleTheme() {
-  const html = document.documentElement;
-  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('st-theme', next);
-  document.querySelector('.theme-btn').textContent = next === 'dark' ? '☀︎' : '☾';
-}
+function toggleTheme() { TbxTheme.toggle(); }
 
-const saved = localStorage.getItem('st-theme');
-if (saved) {
-  document.documentElement.setAttribute('data-theme', saved);
-  document.querySelector('.theme-btn').textContent = saved === 'dark' ? '☀︎' : '☾';
-}
+TbxTheme.restore();
+
+// ── EVENT LISTENERS（替代所有 inline handlers）──────────────
+document.addEventListener('DOMContentLoaded', () => {
+
+  // 靜態元素
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+  document.getElementById('topicInput').addEventListener('input', checkSetup);
+  document.getElementById('startBtn').addEventListener('click', startApp);
+  document.getElementById('timerBtn').addEventListener('click', toggleTimer);
+  document.getElementById('resetBtn').addEventListener('click', resetTimer);
+  document.getElementById('copyBtn').addEventListener('click', copyMarkdown);
+  document.getElementById('restartBtn').addEventListener('click', restart);
+
+  // 事件委派：timeline jump
+  document.getElementById('timeline').addEventListener('click', e => {
+    const seg = e.target.closest('[data-jump]');
+    if (seg) jumpTo(parseInt(seg.dataset.jump));
+  });
+
+  // 事件委派：phase head expand / next
+  document.getElementById('phases').addEventListener('click', e => {
+    const expand = e.target.closest('[data-expand]');
+    if (expand) { toggleExpand(parseInt(expand.dataset.expand)); return; }
+    const next = e.target.closest('[data-next]');
+    if (next) { nextPhase(parseInt(next.dataset.next)); return; }
+    const pick = e.target.closest('[data-pick]');
+    if (pick) { pickPriority(parseInt(pick.dataset.pick)); return; }
+    const emo = e.target.closest('[data-val]');
+    if (emo) { selectEmo(emo, emo.dataset.val, emo.dataset.msg); return; }
+  });
+
+  // 事件委派：phase 文字輸入（sfield-textarea）
+  document.getElementById('phases').addEventListener('input', e => {
+    const sf = e.target.closest('[data-phase][data-key]');
+    if (sf) {
+      saveNote(parseInt(sf.dataset.phase), sf.dataset.key, sf.value);
+      checkNext(parseInt(sf.dataset.phase));
+      return;
+    }
+    const pi = e.target.closest('[data-pidx]');
+    if (pi) {
+      priorityItems[parseInt(pi.dataset.pidx)] = pi.value;
+      checkNext(2);
+      return;
+    }
+  });
+
+  // priority textarea focus（自動展開高度）
+  document.getElementById('phases').addEventListener('focusin', e => {
+    if (e.target.classList.contains('priority-ta')) {
+      e.target.style.minHeight = '22px';
+    }
+  });
+
+});
 </script>
 </body>
 </html>
