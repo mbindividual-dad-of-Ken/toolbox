@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>謙謙爸工具箱</title>
+<meta name="description" content="為思考而造的小工具集合">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="工具箱">
+<meta name="theme-color" content="#0e0d0b" id="themeMetaColor">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  :root, [data-theme="dark"] {
+    --bg: #0e0d0b;
+    --bg2: #14120f;
+    --surface: #1a1916;
+    --surface-hi: #201e1a;
+    --surface2: #242220;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f3f0e9;
+    --muted: #8b8680;
+    --muted2: #6b6660;
+    --amber: #e0b454;
+    --amber-dim: #8a6e2a;
+    --amber-glow: rgba(224,180,84,0.15);
+    --teal: #54c2a2;
+    --teal-dim: #2a6e56;
+    --purple: #b988dc;
+    --blue: #86a6da;
+    --on-accent: #15120c;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.35);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  [data-theme="light"] {
+    --bg: #f4efe3;
+    --bg2: #efe8d8;
+    --surface: #fffdf8;
+    --surface-hi: #fffefb;
+    --surface2: #f1ebdd;
+    --border: rgba(58,44,20,0.10);
+    --border2: rgba(58,44,20,0.18);
+    --text: #2c2418;
+    --muted: #7c7160;
+    --muted2: #a39884;
+    --amber: #a9761c;
+    --amber-dim: #cba656;
+    --amber-glow: rgba(169,118,28,0.14);
+    --teal: #2c8e72;
+    --teal-dim: #95c8b8;
+    --purple: #7c3fa8;
+    --blue: #3a5fa8;
+    --on-accent: #fffdf8;
+    --shadow-sm: 0 1px 3px rgba(70,52,22,0.08);
+    --shadow-md: 0 10px 30px rgba(70,52,22,0.12);
+    --shadow-lg: 0 22px 60px rgba(70,52,22,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif TC', serif;
+    min-height: 100vh;
+    padding: 0;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* HEADER */
+  header {
+    padding: 3rem 1.5rem 2rem;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .brand-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--amber);
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 6vw, 2.8rem);
+    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 0.25rem;
+    line-height: 1.5;
+  }
+
+  .theme-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 9px;
+    padding: 8px 11px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.2s var(--ease);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+  .theme-btn:hover { color: var(--text); background: var(--surface-hi); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    max-width: 720px;
+    margin: 0 auto 2rem;
+  }
+
+  /* GRID */
+  .grid {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 14px;
+  }
+
+  /* TOOL CARD */
+  .card {
+    background: linear-gradient(180deg, var(--surface-hi), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px 22px 18px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.25s var(--ease);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 80% at 10% 0%, var(--card-glow, rgba(224,180,84,0.06)), transparent 70%);
+    pointer-events: none;
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+
+  .card:hover {
+    border-color: var(--card-accent, var(--amber));
+    box-shadow: 0 0 0 1px var(--card-accent, var(--amber)), var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .card:hover .card-icon {
+    background: color-mix(in srgb, var(--card-accent, var(--amber)) 15%, var(--surface2));
+    box-shadow: 0 4px 14px var(--card-glow, rgba(224,180,84,0.2));
+  }
+
+  .card-body { flex: 1; }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 5px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .card-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--muted2);
+    background: var(--surface2);
+    padding: 3px 8px;
+    border-radius: 5px;
+  }
+
+  .card-arrow {
+    font-size: 11px;
+    color: var(--muted2);
+    transition: transform 0.2s var(--ease), color 0.2s;
+  }
+  .card:hover .card-arrow { transform: translateX(3px); color: var(--card-accent, var(--amber)); }
+
+  /* COMING SOON */
+  .card.soon {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .card.soon .card-time::before { content: '即將推出 · '; }
+
+  /* TAG */
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--card-accent, var(--amber));
+    opacity: 0.7;
+    margin-bottom: 2px;
+  }
+
+  /* FOOTER */
+  footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+    font-size: 11px;
+    color: var(--muted2);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    header { padding: 2rem 1.25rem 1.5rem; }
+    .grid { padding: 0 1.25rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <span class="brand-label">謙謙爸工具箱</span>
+      <h1>為思考而造<br>的小工具</h1>
+      <p class="brand-sub">每一個工具，解決一個真實問題。</p>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" title="切換主題">☀︎</button>
+  </div>
+</header>
+
+<div class="divider"></div>
+
+<div class="grid">
+
+  <!-- 決策工具 -->
+  <a class="card" href="https://mbindividual-dad-of-Ken.github.io/decision-tool/"
+     style="--card-accent: var(--amber); --card-glow: var(--amber-glow);">
+    <div class="card-icon">⚖️</div>
+    <div class="card-body">
+      <div class="card-tag">決策</div>
+      <div class="card-title">1 小時決策法</div>
+      <div class="card-desc">引導式計時框架，從釐清問題到承諾行動，避免拖延與衝動。</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-time">~60 min</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- 策略思考 -->
+  <a class="card" href="./strategic/"
+     style="--card-accent: var(--teal); --card-glow: rgba(84,194,162,0.12);">
+    <div class="card-icon">🧭</div>
+    <div class="card-body">
+      <div class="card-tag">策略</div>
+      <div class="card-title">策略思考引導器</div>
+      <div class="card-desc">15 分鐘強制慢下來：先問對的問題，再決定做什麼。</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-time">~15 min</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- 情緒輪 -->
+  <a class="card" href="https://mbindividual-dad-of-Ken.github.io/emotion-wheel/"
+     style="--card-accent: var(--purple); --card-glow: rgba(185,136,220,0.12);">
+    <div class="card-icon">🌀</div>
+    <div class="card-body">
+      <div class="card-tag">情緒 · SEL</div>
+      <div class="card-title">情緒輪光譜</div>
+      <div class="card-desc">72 個情緒詞彙，Plutchik 輪轉盤，幫孩子說出心裡的顏色。</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-time">隨時用</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+  <!-- 慢讀筆記 -->
+  <a class="card" href="https://mbindividual-dad-of-Ken.github.io/reading-tools/"
+     style="--card-accent: var(--blue); --card-glow: rgba(134,166,218,0.12);">
+    <div class="card-icon">📖</div>
+    <div class="card-body">
+      <div class="card-tag">閱讀</div>
+      <div class="card-title">慢讀筆記</div>
+      <div class="card-desc">一本書一張卡，用費曼筆記法留下真正讀懂的東西。</div>
+    </div>
+    <div class="card-footer">
+      <span class="card-time">隨時用</span>
+      <span class="card-arrow">→</span>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  mbindividual-dad-of-Ken · 工具只做一件事，做好一件事
+</footer>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('tbx-theme', next);
+    document.querySelector('.theme-btn').textContent = next === 'dark' ? '☀︎' : '☾';
+  }
+
+  // restore saved theme
+  const saved = localStorage.getItem('tbx-theme');
+  if (saved) {
+    document.documentElement.setAttribute('data-theme', saved);
+    document.querySelector('.theme-btn').textContent = saved === 'dark' ? '☀︎' : '☾';
+  }
+</script>
+</body>
+</html>
+<script>
+  // theme-color meta sync
+  function syncThemeColor() {
+    const t = document.documentElement.getAttribute('data-theme');
+    document.getElementById('themeMetaColor').content = t === 'dark' ? '#0e0d0b' : '#f4efe3';
+  }
+  // patch toggleTheme
+  const _origToggle = toggleTheme;
+  // already defined above; wrap after load
+  document.addEventListener('DOMContentLoaded', () => syncThemeColor());
+
+  // register service worker
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  }
+</script>

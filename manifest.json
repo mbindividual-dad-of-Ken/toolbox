@@ -1,0 +1,47 @@
+{
+  "name": "謙謙爸工具箱",
+  "short_name": "工具箱",
+  "description": "為思考而造的小工具集合",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e0d0b",
+  "theme_color": "#0e0d0b",
+  "lang": "zh-TW",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "1 小時決策法",
+      "url": "https://mbindividual-dad-of-Ken.github.io/decision-tool/",
+      "description": "引導式計時決策框架"
+    },
+    {
+      "name": "策略思考引導器",
+      "url": "./strategic/",
+      "description": "15 分鐘策略思考流程"
+    },
+    {
+      "name": "情緒輪光譜",
+      "url": "https://mbindividual-dad-of-Ken.github.io/emotion-wheel/",
+      "description": "72 個情緒詞彙輪轉盤"
+    },
+    {
+      "name": "慢讀筆記",
+      "url": "https://mbindividual-dad-of-Ken.github.io/reading-tools/",
+      "description": "費曼筆記法閱讀工具"
+    }
+  ]
+}
