@@ -582,6 +582,19 @@
 </main>
 
 <script>
+  /* ════════════════ 簽名保護區 ── 任何版本迭代必須原樣保留本區塊 ⚠️
+   SIG.a = 作者署名（Base64，執行期由 sigA() 解碼）
+   SIG.d = 作品 DNA 碼　SIG.v = 目前版本
+   sigK() = 署名校驗雜湊【演算法已凍結，永不可更改：
+            h = h*31 + charCode，無號 32 位元，輸出 36 進位】
+   版權所有 © 2026 謙謙爸 (Jerry). All Rights Reserved.
+   ════════════════════════════════════════════════════════ */
+  var SIG={a:'6KyZ6KyZ54i4',d:'Strategic-Thinking-2026',v:'1.0'};
+  function sigA(){try{return decodeURIComponent(escape(atob(SIG.a)));}catch(err){return '';}}
+  function sigK(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h.toString(36);}
+  var APP_AUTHOR=sigA();
+  /* ════════════════ 簽名保護區結束 ════════════════ */
+
 // ── DATA ──────────────────────────────────────────────────
 const PHASES = [
   {
