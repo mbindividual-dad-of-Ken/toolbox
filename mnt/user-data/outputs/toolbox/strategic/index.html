@@ -1,241 +1,486 @@
 <!DOCTYPE html>
-<html lang="zh-TW" data-theme="dark">
+<html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self'; img-src 'self' data:; worker-src 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>策略思考引導器 · 謙謙爸工具箱</title>
-<meta name="description" content="15 分鐘策略思考引導器：先問對的問題，再決定做什麼">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#d4a843">
+<title>1小時決策法 · 謙謙爸工具箱</title>
+<link rel="manifest" href="./manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="策略思考">
-<meta name="theme-color" content="#0e0d0b">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../theme.css">
+<meta name="apple-mobile-web-app-title" content="決策法">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;600&display=swap');
+
+  :root {
+    /* phase accents — shared across both themes */
+    --phase-0: #e0b454;
+    --phase-1: #cf8a48;
+    --phase-2: #54c2a2;
+    --phase-3: #86a6da;
+    --phase-4: #b988dc;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* ── DARK THEME (default) ─────────────────────────────── */
+  :root, [data-theme="dark"] {
+    --bg: #0e0d0b;
+    --bg2: #14120f;
+    --surface: #1a1916;
+    --surface-hi: #201e1a;
+    --surface2: #242220;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.14);
+    --text: #f3f0e9;
+    --muted: #8b8680;
+    --muted2: #6b6660;
+    --amber: #e0b454;
+    --amber-2: #d4a843;
+    --amber-dim: #8a6e2a;
+    --amber-glow: rgba(224,180,84,0.15);
+    --teal: #54c2a2;
+    --teal-dim: #2a6e56;
+    --red: #e86756;
+    --red-solid: #e86756;
+    --on-accent: #15120c;
+    --grid-line: rgba(255,255,255,0.013);
+    --aurora-a: rgba(224,180,84,0.10);
+    --aurora-b: rgba(84,194,162,0.06);
+    --scrim: rgba(8,7,6,0.7);
+    --hi-line: rgba(255,255,255,0.04);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.25);
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.35);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  }
+
+  /* ── LIGHT THEME (warm paper) ─────────────────────────── */
+  [data-theme="light"] {
+    --bg: #f4efe3;
+    --bg2: #efe8d8;
+    --surface: #fffdf8;
+    --surface-hi: #fffefb;
+    --surface2: #f1ebdd;
+    --border: rgba(58,44,20,0.10);
+    --border2: rgba(58,44,20,0.18);
+    --text: #2c2418;
+    --muted: #7c7160;
+    --muted2: #a39884;
+    --amber: #a9761c;
+    --amber-2: #946514;
+    --amber-dim: #cba656;
+    --amber-glow: rgba(169,118,28,0.14);
+    --teal: #2c8e72;
+    --teal-dim: #95c8b8;
+    --red: #c0432f;
+    --red-solid: #c0432f;
+    --on-accent: #fffdf8;
+    --grid-line: rgba(58,44,20,0.04);
+    --aurora-a: rgba(224,180,84,0.16);
+    --aurora-b: rgba(84,194,162,0.10);
+    --scrim: rgba(238,231,216,0.62);
+    --hi-line: rgba(255,255,255,0.5);
+    --shadow-sm: 0 1px 3px rgba(70,52,22,0.08);
+    --shadow-md: 0 10px 30px rgba(70,52,22,0.12);
+    --shadow-lg: 0 22px 60px rgba(70,52,22,0.18);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; -webkit-text-size-adjust: 100%; }
 
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Noto Serif TC', serif;
+    font-family: 'DM Mono', 'Noto Serif TC', monospace;
     min-height: 100vh;
-    padding-bottom: 4rem;
-    transition: background 0.3s, color 0.3s;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition: background 0.45s var(--ease), color 0.45s var(--ease);
   }
 
-  /* TOPBAR */
-  .topbar {
+  /* AMBIENT BACKGROUND — grid + warm aurora glow */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 40%, transparent 100%);
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -20% -20% auto -20%;
+    height: 60vh;
+    background:
+      radial-gradient(60% 70% at 30% 0%, var(--aurora-a), transparent 70%),
+      radial-gradient(50% 60% at 80% 10%, var(--aurora-b), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(10px);
+    transition: background 0.8s var(--ease);
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 5rem;
+  }
+
+  /* HEADER */
+  .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
+    margin-bottom: 1.75rem;
+    padding: 0.75rem 0 1.25rem;
     border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    z-index: 10;
-    backdrop-filter: blur(12px);
   }
 
-  .back-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--muted);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: color 0.2s;
+  .header-left { display: flex; align-items: center; gap: 12px; }
+
+  .header-mark {
+    width: 38px; height: 38px;
+    border-radius: 11px;
+    flex-shrink: 0;
+    background:
+      radial-gradient(120% 120% at 30% 20%, rgba(224,180,84,0.9), rgba(207,138,72,0.85));
+    box-shadow: 0 4px 16px rgba(224,180,84,0.28), inset 0 1px 0 rgba(255,255,255,0.4);
+    display: grid; place-items: center;
+    position: relative;
   }
-  .back-link:hover { color: var(--teal); }
+  .header-mark svg { display: block; }
 
-  .topbar-title {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: var(--muted2);
-    text-transform: uppercase;
-  }
-
-  .theme-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-  .theme-btn:hover { color: var(--text); }
-
-  /* MAIN */
-  main {
-    max-width: 560px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 0;
-  }
-
-  /* SETUP SCREEN */
-  #setupScreen { animation: fadeUp 0.4s var(--ease) both; }
-
-  .setup-eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 0.75rem;
-  }
-
-  .setup-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.7rem, 5vw, 2.2rem);
-    line-height: 1.2;
+  .header-left h1 {
+    font-family: 'DM Serif Display', 'Noto Serif TC', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
     color: var(--text);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    white-space: nowrap;
+  }
+  .header-left h1 .accent { color: var(--amber); }
+
+  .header-left p {
+    font-size: 10px;
+    color: var(--muted2);
+    margin-top: 3px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 
-  .setup-sub {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 2rem;
+  .header-right {
+    display: flex;
+    gap: 8px;
   }
 
-  .setup-field {
+  .icon-btn {
+    width: 38px; height: 38px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    overflow: hidden;
-    margin-bottom: 1rem;
-    transition: border-color 0.2s;
-  }
-  .setup-field:focus-within { border-color: var(--teal-dim); }
-
-  .setup-field label {
-    display: block;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--teal);
-    padding: 12px 16px 4px;
-  }
-
-  .setup-field input, .setup-field textarea {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    padding: 4px 16px 14px;
-    font-size: 14px;
-    font-family: 'Noto Serif TC', serif;
-    color: var(--text);
-    line-height: 1.6;
-    resize: none;
-  }
-  .setup-field input::placeholder, .setup-field textarea::placeholder { color: var(--muted2); font-size: 13px; }
-
-  .start-btn {
-    width: 100%;
-    padding: 16px;
-    background: linear-gradient(180deg, #62cfae, var(--teal));
-    border: none;
-    border-radius: 14px;
-    color: var(--on-accent);
-    font-size: 15px;
-    font-weight: 600;
-    font-family: 'Noto Serif TC', serif;
+    border-radius: 10px;
+    color: var(--muted);
     cursor: pointer;
-    box-shadow: 0 6px 24px rgba(84,194,162,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
     transition: all 0.2s var(--ease);
-    margin-top: 0.5rem;
   }
-  .start-btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
-  .start-btn:active { transform: translateY(0) scale(0.98); }
-  .start-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; filter: none; }
+  .icon-btn:hover { border-color: var(--border2); color: var(--text); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+  .icon-btn:active { transform: translateY(0) scale(0.96); }
 
-  /* TIMELINE */
-  #appScreen { display: none; animation: fadeUp 0.4s var(--ease) both; }
+  /* TOPIC INPUT */
+  .topic-wrap {
+    margin-bottom: 1.5rem;
+  }
 
+  .topic-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 9px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .topic-label::before {
+    content: '';
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+    animation: breathe 2.4s var(--ease) infinite;
+  }
+  @keyframes breathe { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  .topic-input {
+    width: 100%;
+    background: linear-gradient(180deg, var(--surface-hi), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--text);
+    outline: none;
+    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.03);
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  }
+  .topic-input::placeholder { color: var(--muted2); }
+  .topic-input:focus {
+    border-color: var(--amber-dim);
+    box-shadow: 0 0 0 3px var(--amber-glow), inset 0 1px 0 rgba(255,255,255,0.03);
+  }
+
+  /* OVERALL TIMER ARC */
+  .arc-section {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-bottom: 1.75rem;
+    padding: 20px 22px;
+    background: linear-gradient(180deg, var(--surface-hi), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .arc-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 120% at 12% 0%, var(--phase-tint, rgba(224,180,84,0.08)), transparent 60%);
+    pointer-events: none;
+    transition: background 0.6s var(--ease);
+  }
+
+  .arc-svg { flex-shrink: 0; filter: drop-shadow(0 0 10px var(--phase-tint, rgba(224,180,84,0.18))); }
+
+  .arc-info { flex: 1; position: relative; z-index: 1; }
+  .arc-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted2); margin-bottom: 5px; }
+  .arc-time { font-size: 2.75rem; font-family: 'DM Serif Display', serif; color: var(--amber); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; transition: color 0.4s var(--ease); }
+  .arc-phase-name { font-size: 13px; color: var(--text); margin-top: 7px; }
+  .arc-phase-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+
+  /* PHASE TIMELINE */
   .timeline {
     display: flex;
     gap: 5px;
     margin-bottom: 1.75rem;
+    padding: 0 2px;
   }
 
   .tl-seg {
     flex: 1;
-    height: 4px;
+    height: 5px;
     border-radius: 3px;
     background: var(--surface2);
     position: relative;
     cursor: pointer;
     transition: transform 0.2s var(--ease);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.2);
   }
-  .tl-seg:hover { transform: scaleY(1.6); }
+  .tl-seg:hover { transform: scaleY(1.5); }
   .tl-seg::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 3px;
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.5s var(--ease);
+    width: 0%;
+    transition: width 1s linear;
   }
-  .tl-seg[data-i="0"]::after { background: var(--phase-0); box-shadow: 0 0 6px var(--phase-0); }
-  .tl-seg[data-i="1"]::after { background: var(--phase-1); box-shadow: 0 0 6px var(--phase-1); }
-  .tl-seg[data-i="2"]::after { background: var(--phase-2); box-shadow: 0 0 6px var(--phase-2); }
-  .tl-seg[data-i="3"]::after { background: var(--phase-3); box-shadow: 0 0 6px var(--phase-3); }
-  .tl-seg.done::after { transform: scaleX(1); }
+  .tl-seg.done::after { width: 100%; }
+  .tl-seg.active::after { width: var(--pct, 0%); }
+  .tl-seg[data-i="0"]::after { background: linear-gradient(90deg, var(--phase-0), #f0c870); box-shadow: 0 0 8px var(--phase-0); }
+  .tl-seg[data-i="1"]::after { background: linear-gradient(90deg, var(--phase-1), #e09a55); box-shadow: 0 0 8px var(--phase-1); }
+  .tl-seg[data-i="2"]::after { background: linear-gradient(90deg, var(--phase-2), #6fd6b5); box-shadow: 0 0 8px var(--phase-2); }
+  .tl-seg[data-i="3"]::after { background: linear-gradient(90deg, var(--phase-3), #9bbaf0); box-shadow: 0 0 8px var(--phase-3); }
+  .tl-seg[data-i="4"]::after { background: linear-gradient(90deg, var(--phase-4), #cd9eee); box-shadow: 0 0 8px var(--phase-4); }
+  .tl-seg .tl-tooltip {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 5px 9px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: var(--shadow-md);
+    transition: all 0.18s var(--ease);
+    z-index: 5;
+  }
+  .tl-seg:hover .tl-tooltip { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* ARC TIMER */
-  .arc-wrap {
+  /* PHASE CARDS */
+  .phases { display: flex; flex-direction: column; gap: 11px; margin-bottom: 1.75rem; }
+
+  .phase-card {
     background: linear-gradient(180deg, var(--surface-hi), var(--surface));
     border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 20px 22px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    position: relative;
+    border-radius: 16px;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    transition: border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease), opacity 0.35s var(--ease);
   }
 
-  .arc-wrap::before {
-    content: '';
+  .phase-card.active {
+    border-color: var(--phase-color, var(--amber));
+    box-shadow: 0 0 0 1px var(--phase-color, var(--amber)), 0 14px 40px var(--phase-glow, rgba(212,168,67,0.15)), inset 0 1px 0 rgba(255,255,255,0.05);
+    transform: translateY(-1px);
+  }
+
+  .phase-card.done { opacity: 0.55; }
+  .phase-card.done:hover { opacity: 0.85; }
+
+  .phase-head {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 15px 17px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .phase-badge {
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    color: var(--muted);
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: all 0.35s var(--ease-spring);
+  }
+  .phase-card.active .phase-badge { background: var(--phase-color); color: var(--on-accent); box-shadow: 0 4px 14px var(--phase-glow); transform: scale(1.06); }
+  .phase-card.done .phase-badge { background: rgba(84,194,162,0.18); color: var(--teal); }
+
+  .phase-head-info { flex: 1; min-width: 0; }
+  .phase-head-title { font-size: 14px; color: var(--text); font-weight: 500; }
+  .phase-head-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .phase-mins {
+    font-size: 12px;
+    color: var(--muted2);
+    font-family: 'DM Mono', monospace;
+    background: var(--surface2);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+  .phase-card.active .phase-mins { color: var(--phase-color); background: var(--phase-glow); }
+
+  .phase-chevron { font-size: 10px; color: var(--muted2); transition: transform 0.25s var(--ease); }
+  .phase-card.expanded .phase-chevron { transform: rotate(180deg); }
+
+  .phase-body {
+    display: none;
+    padding: 4px 17px 17px;
+    border-top: 1px solid var(--border);
+  }
+  .phase-card.expanded .phase-body { display: block; animation: bodyIn 0.4s var(--ease); }
+  @keyframes bodyIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .phase-tasks {
+    list-style: none;
+    padding: 14px 0;
+    margin-bottom: 14px;
+    border-radius: 10px;
+  }
+  .phase-tasks li {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 5px 0 5px 18px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .phase-tasks li::before {
+    content: '→';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(80% 120% at 12% 0%, var(--phase-tint, rgba(84,194,162,0.07)), transparent 60%);
-    pointer-events: none;
-    transition: background 0.5s;
+    left: 0;
+    color: var(--phase-color, var(--amber));
+    font-size: 10px;
+    top: 7px;
+  }
+  .phase-tasks li b { color: var(--text); font-weight: 500; }
+
+  .note-area {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    resize: vertical;
+    min-height: 72px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  .note-area::placeholder { color: var(--muted); }
+  .note-area:focus { border-color: var(--phase-color, var(--amber-dim)); }
+  .note-area:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ACTIVE PHASE TIMER */
+  .timer-section {
+    margin-top: 12px;
   }
 
-  .arc-svg { flex-shrink: 0; filter: drop-shadow(0 0 8px var(--phase-tint, rgba(84,194,162,0.2))); }
+  .timer-bar-wrap {
+    background: var(--surface2);
+    height: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .timer-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--phase-color, var(--amber));
+    width: 0%;
+    transition: width 1s linear;
+  }
 
-  .arc-info { flex: 1; position: relative; z-index: 1; }
-  .arc-label { font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted2); margin-bottom: 4px; }
-  .arc-time { font-family: 'DM Serif Display', serif; font-size: 2.6rem; color: var(--amber); letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; transition: color 0.4s; }
-  .arc-time.warning { color: var(--red); animation: warnPulse 1s ease-in-out infinite; }
-  .arc-phase-name { font-size: 13px; color: var(--text); margin-top: 6px; }
-  .arc-phase-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .timer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
 
-  @keyframes warnPulse { 0%,100% { opacity:1; } 50% { opacity:0.55; } }
-
-  .timer-ctrl { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .timer-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    min-width: 72px;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s;
+  }
+  .timer-num.warning { color: var(--red-solid); animation: warnPulse 1s ease-in-out infinite; }
+  @keyframes warnPulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
 
   .ctrl-btn {
-    padding: 8px 14px;
+    padding: 9px 15px;
     border-radius: 9px;
     border: 1px solid var(--border2);
     background: var(--surface2);
@@ -245,788 +490,1356 @@
     cursor: pointer;
     transition: all 0.18s var(--ease);
   }
-  .ctrl-btn:hover { background: var(--surface-hi); transform: translateY(-1px); }
-  .ctrl-btn.primary { background: var(--phase-color, var(--teal)); border-color: transparent; color: var(--on-accent); font-weight: 500; }
-  .ctrl-btn.primary:hover { filter: brightness(1.08); }
+  .ctrl-btn:hover { background: var(--surface-hi); border-color: var(--border2); transform: translateY(-1px); }
+  .ctrl-btn:active { transform: translateY(0) scale(0.97); }
+  .ctrl-btn.primary { background: var(--phase-color, var(--amber)); border-color: transparent; color: var(--on-accent); font-weight: 500; box-shadow: 0 4px 14px var(--phase-glow, rgba(212,168,67,0.25)); }
+  .ctrl-btn.primary:hover { filter: brightness(1.06); }
+  .ctrl-btn.next { border-color: var(--teal-dim); color: var(--teal); background: rgba(84,194,162,0.06); }
+  .ctrl-btn.next:hover { background: rgba(84,194,162,0.14); }
 
-  /* PHASE CARDS */
-  .phases { display: flex; flex-direction: column; gap: 11px; }
+  /* SOUL TEST OVERLAY */
+  .soul-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    backdrop-filter: blur(16px) saturate(1.2);
+    -webkit-backdrop-filter: blur(16px) saturate(1.2);
+    z-index: 100;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .soul-overlay.visible { display: flex; animation: fadeIn 0.35s var(--ease); }
 
-  .phase-card {
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { from { opacity: 0; transform: translateY(16px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  .soul-countdown {
+    font-family: 'DM Serif Display', serif;
+    font-size: 7rem;
+    color: var(--amber);
+    line-height: 1;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 40px var(--amber-glow);
+    animation: pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(0.92); } }
+
+  .soul-q {
+    font-family: 'DM Serif Display', 'Noto Serif TC', serif;
+    font-size: 1.45rem;
+    color: var(--text);
+    text-align: center;
+    max-width: 480px;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    font-style: italic;
+    animation: popIn 0.5s var(--ease) 0.05s both;
+  }
+
+  .soul-options { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 520px; }
+  .soul-opt {
+    padding: 13px 24px;
+    background: linear-gradient(180deg, var(--surface-hi), var(--surface));
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s var(--ease);
+    animation: popIn 0.5s var(--ease) both;
+  }
+  .soul-opt:nth-child(1) { animation-delay: 0.12s; }
+  .soul-opt:nth-child(2) { animation-delay: 0.18s; }
+  .soul-opt:nth-child(3) { animation-delay: 0.24s; }
+  .soul-opt:nth-child(4) { animation-delay: 0.30s; }
+  .soul-opt:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-glow); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+  .soul-skip { margin-top: 1.5rem; font-size: 11px; color: var(--muted2); cursor: pointer; transition: color 0.2s; }
+  .soul-skip:hover { color: var(--text); }
+
+  /* SUMMARY */
+  .summary-section {
+    background: linear-gradient(180deg, var(--surface-hi), var(--surface));
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    display: none;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-section::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--phase-0), var(--phase-1), var(--phase-2), var(--phase-3), var(--phase-4));
+  }
+  .summary-section.visible { display: block; animation: popIn 0.5s var(--ease); }
+  .summary-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--amber);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .summary-row { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+  .summary-key {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted2);
+    width: 64px;
+    flex-shrink: 0;
+    padding-top: 3px;
+  }
+  .summary-val { font-size: 13px; color: var(--text); flex: 1; line-height: 1.65; white-space: pre-wrap; }
+
+  .export-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+  /* LOG */
+  .log-section {
+    margin-top: 2rem;
+  }
+  .log-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .log-clear { cursor: pointer; color: var(--muted); font-size: 10px; }
+  .log-clear:hover { color: var(--red); }
+  .log-list { display: flex; flex-direction: column; gap: 8px; }
+  .log-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .log-item:hover { border-color: var(--border2); }
+  .log-date { font-size: 10px; color: var(--muted); min-width: 80px; flex-shrink: 0; margin-top: 2px; }
+  .log-topic { font-size: 13px; color: var(--text); }
+  .log-decision { font-size: 11px; color: var(--teal); margin-top: 2px; }
+  .log-empty { font-size: 12px; color: var(--muted); text-align: center; padding: 1.5rem; }
+
+  /* COPY TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: linear-gradient(180deg, #62cfae, var(--teal));
+    color: var(--on-accent);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 10px 30px rgba(84,194,162,0.35);
+    opacity: 0;
+    transition: all 0.35s var(--ease);
+    pointer-events: none;
+    z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* UTIL */
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+  .mt8 { margin-top: 8px; }
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* EMOTION CHECK */
+  .emotion-section {
+    margin-bottom: 1.5rem;
     background: linear-gradient(180deg, var(--surface-hi), var(--surface));
     border: 1px solid var(--border);
     border-radius: 16px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease), opacity 0.35s;
-  }
-  .phase-card.active {
-    border-color: var(--phase-color, var(--teal));
-    box-shadow: 0 0 0 1px var(--phase-color, var(--teal)), 0 14px 40px var(--phase-glow, rgba(84,194,162,0.12)), inset 0 1px 0 rgba(255,255,255,0.04);
-    transform: translateY(-1px);
-  }
-  .phase-card.done { opacity: 0.5; }
-  .phase-card.done:hover { opacity: 0.85; }
-
-  .phase-head {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px; cursor: pointer; user-select: none;
-  }
-
-  .phase-badge {
-    width: 32px; height: 32px; border-radius: 9px;
-    background: var(--surface2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: var(--muted); flex-shrink: 0;
-    font-family: 'DM Mono', monospace;
-    transition: all 0.35s var(--ease-spring);
-  }
-  .phase-card.active .phase-badge { background: var(--phase-color); color: var(--on-accent); box-shadow: 0 4px 12px var(--phase-glow); transform: scale(1.05); }
-  .phase-card.done .phase-badge { background: rgba(84,194,162,0.15); color: var(--teal); }
-
-  .phase-head-info { flex: 1; min-width: 0; }
-  .phase-head-title { font-size: 14px; color: var(--text); font-weight: 500; }
-  .phase-head-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  .phase-mins {
-    font-size: 11px; color: var(--muted2);
-    font-family: 'DM Mono', monospace;
-    background: var(--surface2); padding: 3px 7px; border-radius: 5px;
-  }
-  .phase-card.active .phase-mins { color: var(--phase-color); background: var(--phase-glow); }
-
-  .phase-body {
-    display: none; padding: 4px 16px 16px;
-    border-top: 1px solid var(--border);
-  }
-  .phase-card.expanded .phase-body { display: block; animation: bodyIn 0.35s var(--ease); }
-  @keyframes bodyIn { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
-
-  /* FIELDS */
-  .sfields { display: flex; flex-direction: column; gap: 10px; padding: 12px 0; }
-
-  .sfield {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 10px; overflow: hidden; transition: border-color 0.2s;
-  }
-  .sfield:focus-within { border-color: var(--phase-color, var(--teal-dim)); }
-
-  .sfield-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 8px 12px 0; color: var(--phase-color, var(--teal));
-  }
-  .sfield-hint {
-    font-size: 11px; color: var(--muted);
-    padding: 2px 12px 6px; line-height: 1.45;
-    border-bottom: 1px solid var(--border);
-  }
-  .sfield-textarea {
-    width: 100%; background: transparent; border: none; outline: none;
-    padding: 10px 12px; font-size: 13px; font-family: 'Noto Serif TC', serif;
-    color: var(--text); line-height: 1.6; resize: none; min-height: 60px;
-  }
-  .sfield-textarea::placeholder { color: var(--muted2); font-size: 12px; }
-  .sfield-textarea:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* EMOTION CHECK */
-  .emo-grid { display: flex; flex-wrap: wrap; gap: 7px; padding: 12px 0 4px; }
-  .emo-btn {
-    padding: 8px 13px; border-radius: 9px;
-    background: var(--surface2); border: 1px solid var(--border);
-    color: var(--muted); font-size: 12px; font-family: 'Noto Serif TC', serif;
-    cursor: pointer; transition: all 0.2s var(--ease);
-  }
-  .emo-btn:hover { border-color: var(--border2); color: var(--text); }
-  .emo-btn.selected { background: var(--phase-0); border-color: transparent; color: var(--on-accent); font-weight: 500; box-shadow: 0 4px 12px rgba(224,180,84,0.25); }
-
-  .emo-warn {
-    font-size: 12px; color: var(--red); line-height: 1.55;
-    background: rgba(232,103,86,0.08); border: 1px solid rgba(232,103,86,0.2);
-    border-radius: 9px; padding: 10px 13px;
-    display: none; margin-top: 4px;
-  }
-  .emo-warn.vis { display: block; animation: bodyIn 0.3s var(--ease); }
-
-  /* PRIORITY LIST */
-  .priority-list { display: flex; flex-direction: column; gap: 7px; padding-top: 10px; }
-  .priority-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 10px; padding: 10px 12px; transition: all 0.2s;
-  }
-  .priority-item.selected-item {
-    border-color: var(--phase-2);
-    box-shadow: 0 0 0 1px var(--phase-2), 0 4px 12px rgba(134,166,218,0.15);
-  }
-  .priority-item.deprioritized { opacity: 0.4; }
-  .priority-item textarea {
-    flex: 1; background: transparent; border: none; outline: none;
-    font-size: 13px; font-family: 'Noto Serif TC', serif;
-    color: var(--text); resize: none; min-height: 22px; line-height: 1.5;
-  }
-  .priority-item textarea::placeholder { color: var(--muted2); font-size: 12px; }
-  .priority-pick {
-    flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
-    background: var(--surface); border: 1px solid var(--border2);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 10px; color: var(--muted2); transition: all 0.2s;
-    margin-top: 1px;
-  }
-  .priority-pick:hover { border-color: var(--phase-2); color: var(--phase-2); }
-  .selected-item .priority-pick { background: var(--phase-2); border-color: transparent; color: var(--on-accent); }
-
-  .priority-hint { font-size: 11px; color: var(--muted); line-height: 1.55; padding-top: 4px; }
-
-  /* NEXT BTN */
-  .phase-next {
-    width: 100%; padding: 13px;
-    background: var(--phase-color, var(--teal)); border: none; border-radius: 10px;
-    color: var(--on-accent); font-size: 13px; font-weight: 500;
-    font-family: 'Noto Serif TC', serif;
-    cursor: pointer; margin-top: 12px;
-    box-shadow: 0 4px 14px var(--phase-glow, rgba(84,194,162,0.25));
-    transition: all 0.2s var(--ease);
-  }
-  .phase-next:hover { filter: brightness(1.07); transform: translateY(-1px); }
-  .phase-next:disabled { opacity: 0.35; cursor: not-allowed; transform: none; filter: none; }
-
-  /* SUMMARY */
-  #summaryScreen {
+    padding: 18px;
     display: none;
-    animation: fadeUp 0.45s var(--ease) both;
+    box-shadow: var(--shadow-sm);
   }
-
-  .summary-hero {
-    text-align: center; padding: 2rem 0 1.5rem;
+  .emotion-section.visible { display: block; animation: popIn 0.45s var(--ease); }
+  .emotion-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 12px; display: block; }
+  .emotion-grid { display: flex; gap: 8px; flex-wrap: wrap; }
+  .emo-btn {
+    padding: 9px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    display: flex; align-items: center; gap: 6px;
   }
-
-  .summary-check {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: linear-gradient(180deg, #62cfae, var(--teal));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; margin: 0 auto 1rem;
-    box-shadow: 0 8px 24px rgba(84,194,162,0.35);
-    animation: popIn 0.5s var(--ease-spring) both;
+  .emo-btn:hover { border-color: var(--border2); color: var(--text); transform: translateY(-1px); }
+  .emo-btn.selected { border-color: var(--emo-color, var(--amber)); color: var(--emo-color, var(--amber)); background: var(--emo-bg, var(--amber-glow)); box-shadow: 0 4px 14px var(--emo-bg, var(--amber-glow)); }
+  .emotion-warning {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: rgba(224,92,75,0.1);
+    border: 1px solid rgba(224,92,75,0.3);
+    border-radius: 8px;
+    font-size: 12px;
+    color: #e05c4b;
+    display: none;
+    line-height: 1.5;
   }
+  .emotion-warning.visible { display: block; }
 
-  .summary-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem; color: var(--text); line-height: 1.3;
-    margin-bottom: 0.5rem;
+  /* DECISION TYPE */
+  .dtype-section {
+    margin-bottom: 1.5rem;
+    display: none;
   }
-
-  .summary-sub { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-  .summary-card {
+  .dtype-section.visible { display: block; animation: popIn 0.45s var(--ease) 0.05s both; }
+  .dtype-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 9px; display: block; }
+  .dtype-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+  .dtype-btn {
+    padding: 14px 10px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
     background: linear-gradient(180deg, var(--surface-hi), var(--surface));
-    border: 1px solid var(--border); border-radius: 16px;
-    padding: 18px 20px; margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 11px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    text-align: center;
+    line-height: 1.4;
+    box-shadow: var(--shadow-sm);
   }
-
-  .summary-card-label {
-    font-family: 'DM Mono', monospace; font-size: 10px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--teal); margin-bottom: 8px;
+  .dtype-btn:hover { border-color: var(--border2); color: var(--text); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .dtype-btn.selected { border-color: var(--amber-dim); color: var(--amber); background: var(--amber-glow); box-shadow: 0 6px 18px var(--amber-glow); }
+  .dtype-btn .dtype-icon { font-size: 18px; display: block; margin-bottom: 5px; }
+  .dtype-btn .dtype-name { font-weight: 500; color: inherit; display: block; }
+  .dtype-btn .dtype-hint { font-size: 10px; color: var(--muted); display: block; margin-top: 2px; }
+  .dtype-note {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface2);
+    line-height: 1.5;
+    display: none;
   }
+  .dtype-note.visible { display: block; }
 
-  .summary-card-content {
-    font-size: 13px; color: var(--text); line-height: 1.7;
-    white-space: pre-wrap;
+  /* REGRET-PROOF OVERLAY */
+  .regret-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--scrim);
+    backdrop-filter: blur(18px) saturate(1.2);
+    -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    z-index: 110;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
   }
-
-  .summary-btns { display: flex; gap: 10px; margin-top: 1.5rem; flex-wrap: wrap; }
-
-  .copy-btn {
-    flex: 1; padding: 13px;
+  .regret-overlay.visible { display: flex; animation: fadeIn 0.35s var(--ease); }
+  .regret-icon { font-size: 3rem; margin-bottom: 1rem; animation: popIn 0.5s var(--ease-spring); }
+  .regret-q {
+    font-family: 'DM Serif Display', 'Noto Serif TC', serif;
+    font-size: 1.55rem;
+    color: var(--text);
+    text-align: center;
+    max-width: 440px;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    animation: popIn 0.5s var(--ease) 0.05s both;
+  }
+  .regret-sub {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    max-width: 360px;
+  }
+  .regret-sub b { color: var(--text); font-weight: 500; }
+  .regret-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .regret-yes {
+    padding: 13px 28px;
     background: linear-gradient(180deg, #62cfae, var(--teal));
-    border: none; border-radius: 11px;
-    color: var(--on-accent); font-size: 13px; font-weight: 500;
-    font-family: inherit; cursor: pointer;
+    border: none;
+    border-radius: 11px;
+    color: var(--on-accent);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
     box-shadow: 0 6px 20px rgba(84,194,162,0.3);
     transition: all 0.2s var(--ease);
   }
-  .copy-btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
-
-  .restart-btn {
-    flex: 1; padding: 13px;
-    background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 11px; color: var(--muted); font-size: 13px;
-    font-family: inherit; cursor: pointer; transition: all 0.2s;
+  .regret-yes:hover { filter: brightness(1.05); transform: translateY(-1px); }
+  .regret-no {
+    padding: 13px 28px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 11px;
+    color: var(--muted);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
   }
-  .restart-btn:hover { color: var(--text); }
-
-  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-  @keyframes popIn { from { opacity:0; transform:scale(0.8); } to { opacity:1; transform:scale(1); } }
-
-  @media (max-width: 480px) {
-    main { padding: 1.5rem 1.25rem 0; }
-    .arc-time { font-size: 2rem; }
+  .regret-no:hover { color: var(--text); border-color: var(--border2); background: var(--surface-hi); }
+  .regret-mantra {
+    margin-top: 1.5rem;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+    max-width: 320px;
+    line-height: 1.6;
   }
 
+  /* STRUCTURED FIELDS */
+  .sfields-wrap { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+
+  .sfield {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .sfield:focus-within { border-color: var(--phase-color, var(--amber-dim)); }
+
+  .sfield-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 12px 0;
+    line-height: 1;
+  }
+
+  .sfield-hint {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 3px 12px 6px;
+    line-height: 1.4;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sfield-input, .sfield-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--text);
+    line-height: 1.6;
+    resize: none;
+  }
+  .sfield-input::placeholder, .sfield-textarea::placeholder { color: rgba(122,117,112,0.5); font-size: 12px; }
+  .sfield-input:disabled, .sfield-textarea:disabled { opacity: 0.45; cursor: not-allowed; }
+  .sfield-textarea { min-height: 60px; resize: vertical; }
+
+  /* v2 次要欄位折疊 */
+  .sfields-secondary { display: none; flex-direction: column; gap: 12px; }
+  .sfields-secondary.open { display: flex; }
+  .sfields-toggle {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 4px; cursor: pointer;
+    font-size: 11px; color: var(--muted);
+    user-select: none; transition: color 0.2s;
+  }
+  .sfields-toggle:hover { color: var(--text); }
+  .sfields-toggle-icon { font-size: 9px; transition: transform 0.2s; }
+  .sfields-toggle.open .sfields-toggle-icon { transform: rotate(90deg); }
+
+  /* COMPLETION FLASH */
+  @keyframes completeFlash {
+    0% { opacity: 1; }
+    30% { opacity: 0.4; background: rgba(77,184,150,0.15); }
+    100% { opacity: 0.6; }
+  }
+  .phase-card.done { animation: none; }
+  .phase-card.just-done { animation: completeFlash 0.6s ease forwards; }
+
+  /* RESET */
+  button { font-family: inherit; }
+  textarea { font-family: inherit; }
+
+  /* REDUCED MOTION */
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
   }
 </style>
+<script>
+  // apply saved theme before paint to avoid flash
+  (function(){
+    var t = localStorage.getItem('decisionTheme') || 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+<link rel="stylesheet" href="https://raw.githubusercontent.com/mbindividual-dad-of-Ken/toolbox/main/theme.css">
+<script src="https://raw.githubusercontent.com/mbindividual-dad-of-Ken/toolbox/main/toolbox-utils.js"></script>
 </head>
 <body>
 
-<div class="topbar">
-  <a class="back-link" href="../">← 工具箱</a>
-  <span class="topbar-title">策略思考引導器</span>
-  <button class="theme-btn" id="themeBtn">☀︎</button>
-</div>
+<div class="app">
+  <h2 class="sr-only">1 小時決策法 — 引導式計時工具</h2>
 
-<main>
-
-<!-- SETUP -->
-<div id="setupScreen">
-  <p class="setup-eyebrow">15 分鐘 · 4 個階段</p>
-  <h1 class="setup-title">先問對的問題<br>再決定做什麼</h1>
-  <p class="setup-sub">當你感覺在救火、事情做不完、或不確定方向對不對——<br>用這個工具強制慢下來。</p>
-
-  <div class="setup-field">
-    <label for="topicInput">這次要思考的主題</label>
-    <input id="topicInput" type="text" placeholder="例：Q3 工作計畫、要不要推動 X 專案…" id="topicInput">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="header-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="8" stroke="#1a1410" stroke-width="1.6" opacity="0.5"/>
+          <path d="M10 10 L10 4" stroke="#1a1410" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M10 10 L14 12" stroke="#1a1410" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="10" cy="10" r="1.4" fill="#1a1410"/>
+        </svg>
+      </div>
+      <div>
+        <h1>1<span class="accent">小時</span>決策法</h1>
+        <p>謙謙爸工具箱 · Vol.01</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="icon-btn" onclick="toggleTheme()" id="themeBtn" title="切換主題" aria-label="切換深色／淺色">☾</button>
+      <button class="icon-btn" onclick="toggleSound()" id="soundBtn" title="音效" aria-label="音效開關">🔔</button>
+      <button class="icon-btn" onclick="resetAll()" title="重新開始" aria-label="重新開始">↺</button>
+      <button class="icon-btn" onclick="toggleLog()" title="決策日誌" id="logBtn" aria-label="決策日誌">☰</button>
+    </div>
   </div>
 
-  <button class="start-btn" id="startBtn" id="startBtn" disabled>開始思考 →</button>
-</div>
+  <!-- TOPIC -->
+  <div class="topic-wrap">
+    <label class="topic-label" for="topicInput">我要決定的事情是⋯</label>
+    <input class="topic-input" id="topicInput" type="text" placeholder="例：要不要換工作、要選哪個方案、要去哪裡念書⋯" />
+  </div>
 
-<!-- APP -->
-<div id="appScreen">
+  <!-- EMOTION CHECK -->
+  <div class="emotion-section" id="emotionSection">
+    <span class="emotion-label">決策前：我現在的狀態是⋯</span>
+    <div class="emotion-grid">
+      <button class="emo-btn" style="--emo-color:#4db896;--emo-bg:rgba(77,184,150,0.1)" onclick="selectEmo(this,'清醒')">😌 清醒專注</button>
+      <button class="emo-btn" style="--emo-color:#d4a843;--emo-bg:rgba(212,168,67,0.1)" onclick="selectEmo(this,'逃避')">😶 想逃避</button>
+      <button class="emo-btn" style="--emo-color:#e05c4b;--emo-bg:rgba(224,92,75,0.1)" onclick="selectEmo(this,'焦慮')">😰 焦慮緊繃</button>
+      <button class="emo-btn" style="--emo-color:#7b9fd4;--emo-bg:rgba(123,159,212,0.1)" onclick="selectEmo(this,'疲憊')">😴 疲憊耗竭</button>
+      <button class="emo-btn" style="--emo-color:#b07bd4;--emo-bg:rgba(176,123,212,0.1)" onclick="selectEmo(this,'衝動')">🔥 衝動激動</button>
+      <button class="emo-btn" style="--emo-color:#4db896;--emo-bg:rgba(77,184,150,0.1)" onclick="selectEmo(this,'平靜')">🌿 平靜沉著</button>
+    </div>
+    <div class="emotion-warning" id="emotionWarning"></div>
+  </div>
 
-  <div class="timeline" id="timeline"></div>
+  <!-- DECISION TYPE -->
+  <div class="dtype-section" id="dtypeSection">
+    <span class="dtype-label">這是哪種類型的決策？</span>
+    <div class="dtype-grid">
+      <button class="dtype-btn" onclick="selectDtype(this,'small',15)">
+        <span class="dtype-icon">⚡</span>
+        <span class="dtype-name">小事</span>
+        <span class="dtype-hint">可逆、低影響</span>
+        <span class="dtype-hint">→ 15 分鐘版</span>
+      </button>
+      <button class="dtype-btn" onclick="selectDtype(this,'medium',60)">
+        <span class="dtype-icon">⏱</span>
+        <span class="dtype-name">中型</span>
+        <span class="dtype-hint">有一定影響</span>
+        <span class="dtype-hint">→ 60 分鐘版</span>
+      </button>
+      <button class="dtype-btn" onclick="selectDtype(this,'big',60)">
+        <span class="dtype-icon">🌏</span>
+        <span class="dtype-name">重大</span>
+        <span class="dtype-hint">難逆轉、高風險</span>
+        <span class="dtype-hint">→ 框架 + 建議</span>
+      </button>
+    </div>
+    <div class="dtype-note" id="dtypeNote"></div>
+  </div>
 
-  <div class="arc-wrap" id="arcWrap">
-    <svg class="arc-svg" width="56" height="56" viewBox="0 0 56 56">
-      <circle cx="28" cy="28" r="22" fill="none" stroke="var(--surface2)" stroke-width="4"/>
-      <circle id="arcCircle" cx="28" cy="28" r="22" fill="none"
-        stroke="var(--teal)" stroke-width="4" stroke-linecap="round"
-        stroke-dasharray="138.2" stroke-dashoffset="138.2"
-        transform="rotate(-90 28 28)"
-        style="transition: stroke-dashoffset 1s linear, stroke 0.4s;"/>
+  <!-- ARC TIMER -->
+  <div class="arc-section" id="arcSection">
+    <svg class="arc-svg" width="92" height="92" viewBox="0 0 80 80" aria-hidden="true">
+      <defs>
+        <linearGradient id="arcGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e0b454"/>
+          <stop offset="100%" stop-color="#cf8a48"/>
+        </linearGradient>
+      </defs>
+      <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="5"/>
+      <circle cx="40" cy="40" r="34" fill="none" stroke="url(#arcGrad)" stroke-width="5"
+        stroke-dasharray="213.6" stroke-dashoffset="213.6"
+        stroke-linecap="round" transform="rotate(-90 40 40)"
+        id="arcCircle" style="transition: stroke-dashoffset 1s linear, stroke 0.4s ease;"/>
     </svg>
     <div class="arc-info">
-      <div class="arc-label">剩餘時間</div>
-      <div class="arc-time" id="arcTime">—</div>
-      <div class="arc-phase-name" id="arcPhaseName">—</div>
-      <div class="arc-phase-sub" id="arcPhaseSub"></div>
+      <div class="arc-label">當前階段剩餘時間</div>
+      <div class="arc-time" id="arcTime">—:——</div>
+      <div class="arc-phase-name" id="arcPhaseName">尚未開始</div>
+      <div class="arc-phase-sub" id="arcPhaseSub">請填寫決策主題後開始第一階段</div>
     </div>
   </div>
 
-  <div class="timer-ctrl">
-    <button class="ctrl-btn primary" id="timerBtn" id="timerBtn">▶ 開始計時</button>
-    <button class="ctrl-btn" id="resetBtn">↺ 重設</button>
+  <!-- TIMELINE -->
+  <div class="timeline" id="timeline"></div>
+
+  <!-- PHASES -->
+  <div class="phases" id="phaseContainer"></div>
+
+  <!-- SUMMARY -->
+  <div class="summary-section" id="summarySection">
+    <div class="summary-title">✦ 決策完成</div>
+    <div class="summary-row"><div class="summary-key">主題</div><div class="summary-val" id="sT">—</div></div>
+    <div class="summary-row"><div class="summary-key">問題</div><div class="summary-val" id="sN0">—</div></div>
+    <div class="summary-row"><div class="summary-key">選項</div><div class="summary-val" id="sN1">—</div></div>
+    <div class="summary-row"><div class="summary-key">評估</div><div class="summary-val" id="sN2">—</div></div>
+    <div class="summary-row"><div class="summary-key">直覺</div><div class="summary-val" id="sN3">—</div></div>
+    <div class="summary-row"><div class="summary-key">決定</div><div class="summary-val" id="sN4">—</div></div>
+    <div class="export-row">
+      <button class="ctrl-btn primary" onclick="copyMarkdown()">複製 Markdown ↗</button>
+      <button class="ctrl-btn" onclick="resetAll()">開始新決策</button>
+    </div>
   </div>
 
-  <div style="height:1.25rem"></div>
-  <div class="phases" id="phases"></div>
-
+  <!-- LOG SECTION -->
+  <div class="log-section" id="logSection" style="display:none;">
+    <div class="divider"></div>
+    <div class="log-title">
+      <span>決策日誌</span>
+      <span class="log-clear" onclick="clearLog()">清除全部</span>
+    </div>
+    <div class="log-list" id="logList"></div>
+  </div>
+  <!-- footer -->
+  <div style="margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center">
+    <div style="font-size:11px;color:var(--muted);letter-spacing:0.08em">謙謙爸工具箱 · Vol.01</div>
+    <div style="font-size:10px;color:rgba(122,117,112,0.5);margin-top:4px">1小時決策法 — 用結構化流程，認真對待每一個選擇</div>
+  </div>
 </div>
 
-<!-- SUMMARY -->
-<div id="summaryScreen">
-  <div class="summary-hero">
-    <div class="summary-check">✓</div>
-    <div class="summary-title" id="summaryTitle">思考完成</div>
-    <div class="summary-sub">以下是本次的策略快照，複製後貼入 Obsidian。</div>
+<!-- REGRET-PROOF OVERLAY -->
+<div class="regret-overlay" id="regretOverlay" role="dialog" aria-modal="true" aria-label="反後悔確認">
+  <div class="regret-icon">⚖️</div>
+  <div class="regret-q">你能接受這個決定的最壞結果嗎？</div>
+  <div class="regret-sub">
+    大多數決策是<b>可以調整的</b>。<br>
+    快速決定 + 持續修正，比完美的猶豫更有力量。<br><br>
+    <b>不確定也是一種答案</b>——選擇先行動，<br>
+    讓現實告訴你下一步該怎麼調整。<br><br>
+    確認後，這個決策將正式記錄進你的日誌。
   </div>
-
-  <div id="summaryCards"></div>
-
-  <div class="summary-btns">
-    <button class="copy-btn" id="copyBtn">複製 Markdown ↗</button>
-    <button class="restart-btn" id="restartBtn">開始新一輪</button>
+  <div class="regret-actions">
+    <button class="regret-yes" onclick="confirmRegret()">我能接受，正式確認 ✓</button>
+    <button class="regret-no" onclick="closeRegret()">我還需要想一想</button>
   </div>
-  <div style="height:2rem"></div>
+  <div class="regret-mantra">「做完決策不代表對，代表你認真對待自己。」</div>
 </div>
 
-</main>
+<!-- SOUL TEST OVERLAY -->
+<div class="soul-overlay" id="soulOverlay" role="dialog" aria-modal="true" aria-label="靈魂快問">
+  <div class="soul-countdown" id="soulCountdown">5</div>
+  <div class="soul-q">如果現在就要立刻決定，<br>你的靈魂想選哪一個？</div>
+  <div class="soul-options" id="soulOptions"></div>
+  <div class="soul-skip" onclick="closeSoul()">跳過此測試</div>
+</div>
 
-<script src="../toolbox-utils.js"></script>
+<!-- TOAST -->
+<div class="toast" id="toast">已複製到剪貼簿</div>
+
 <script>
-  /* ════════════════ 簽名保護區 ── 任何版本迭代必須原樣保留本區塊 ⚠️
-   SIG.a = 作者署名（Base64，執行期由 sigA() 解碼）
-   SIG.d = 作品 DNA 碼　SIG.v = 目前版本
-   sigK() = 署名校驗雜湊【演算法已凍結，永不可更改：
-            h = h*31 + charCode，無號 32 位元，輸出 36 進位】
-   版權所有 © 2026 謙謙爸 (Jerry). All Rights Reserved.
-   ════════════════════════════════════════════════════════ */
-  var SIG={a:'6KyZ6KyZ54i4',d:'Strategic-Thinking-2026',v:'1.0'};
-  function sigA(){try{return decodeURIComponent(escape(atob(SIG.a)));}catch(err){return '';}}
-  function sigK(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h.toString(36);}
-  var APP_AUTHOR=sigA();
-  /* ════════════════ 簽名保護區結束 ════════════════ */
-
-
-// ── DATA ──────────────────────────────────────────────────
 const PHASES = [
   {
-    title: '情緒 Check-in',
-    sub: '現在的狀態適合策略思考嗎？',
-    mins: 2,
-    color: '#e0b454',
-    glow: 'rgba(224,180,84,0.15)',
-    type: 'emotion'
+    title: '釐清問題', sub: '10 分鐘', mins: 10,
+    color: '#d4a843', glow: 'rgba(212,168,67,0.12)',
+    question: '我在做什麼決定？',
+    tasks: [
+      '<b>寫下</b>確切的決策問題',
+      '<b>定義</b>目標與期望的結果',
+      '<b>列出</b>限制條件（時間、金錢、關係、價值觀）',
+      '完成後：你能用一句話說清楚嗎？'
+    ],
+    placeholder: '問題是：\n目標是：\n限制條件：'
   },
   {
-    title: 'Zoom Out 三問',
-    sub: '先確認問題，再決定方向',
-    mins: 5,
-    color: '#54c2a2',
-    glow: 'rgba(84,194,162,0.15)',
-    type: 'zoomout',
-    fields: [
-      { key: 'q1', label: '解決什麼問題？', hint: '描述現象背後的真正痛點，而非表面症狀', placeholder: '例：不是「事情太多」，而是「沒有判斷優先序的機制」' },
-      { key: 'q2', label: '為誰？', hint: '最終受益的人是誰？利害關係人有哪些？', placeholder: '例：自己、團隊、服務對象…' },
-      { key: 'q3', label: '為何是現在？', hint: '什麼條件讓這件事現在值得處理？', placeholder: '例：截止日、機會窗口、資源到位…' }
-    ]
+    title: '產生選項', sub: '20 分鐘', mins: 20,
+    color: '#c47d3a', glow: 'rgba(196,125,58,0.12)',
+    question: '有哪些可能的選項？',
+    tasks: [
+      '用「三選項法」腦力激盪：<b>安全</b> / <b>冒險</b> / <b>混合</b>',
+      '<b>不要過濾</b>——先創造選項',
+      '一旦寫下就不能刪除，只能繼續加'
+    ],
+    placeholder: '安全方案：\n冒險方案：\n混合方案：\n其他想法：'
   },
   {
-    title: '無情取捨',
-    sub: '只能選一個「最能移動指針」的行動',
-    mins: 5,
-    color: '#86a6da',
-    glow: 'rgba(134,166,218,0.15)',
-    type: 'priority'
+    title: '評估利弊', sub: '15 分鐘', mins: 15,
+    color: '#4db896', glow: 'rgba(77,184,150,0.12)',
+    question: '各選項的最壞情況是什麼？',
+    tasks: [
+      '用矩陣比較各選項（成本、時間、影響力）',
+      '對每個選項問：<b>最壞情況是什麼？</b>',
+      '刪除低價值的選項，留下最後 2-3 個'
+    ],
+    placeholder: '各選項評分：\n最壞情況分析：\n刪除的選項：'
   },
   {
-    title: '一句話策略',
-    sub: '可以重複說、讓人記住的那句話',
-    mins: 3,
-    color: '#b988dc',
-    glow: 'rgba(185,136,220,0.15)',
-    type: 'sentence',
-    fields: [
-      { key: 'strategy', label: '一句話策略', hint: '格式：我們要為 [誰] 做 [什麼]，讓 [什麼結果] 發生', placeholder: '例：我們要為忙碌的自己設計一個強制慢下來的儀式，讓思考品質不被緊急事務吞噬' }
-    ]
+    title: '直覺確認', sub: '10 分鐘', mins: 10,
+    color: '#7b9fd4', glow: 'rgba(123,159,212,0.12)',
+    question: '70% 邏輯 + 30% 直覺',
+    tasks: [
+      '<b>靈魂快問</b>將在此階段觸發',
+      '70% 邏輯面（事實、數據、理性分析）',
+      '30% 直覺面（感受、身體反應、價值觀）',
+      '快測：「如果現在就要決定，我選哪個？」'
+    ],
+    placeholder: '邏輯告訴我：\n直覺告訴我：\n我目前傾向：'
+  },
+  {
+    title: '承諾行動', sub: '5 分鐘', mins: 5,
+    color: '#b07bd4', glow: 'rgba(176,123,212,0.12)',
+    question: '選定、寫下、說出來',
+    tasks: [
+      '<b>選出</b>最佳選項並寫下來',
+      '<b>說出來</b>——大聲朗讀你的決定',
+      '在同一個小時內採取一個<b>微行動</b>（打電話、寫信、記錄計畫）'
+    ],
+    placeholder: '我的最終決定是：\n第一個微行動：\n預計執行時間：'
   }
 ];
 
-const EMOTIONS = [
-  { label: '😌 清醒專注', val: 'ok' },
-  { label: '🌿 平靜沉著', val: 'ok' },
-  { label: '😶 有點茫', val: 'warn', msg: '💡 茫然時策略思考反而有幫助——帶著問題走完流程，通常能找到方向。繼續吧。' },
-  { label: '😰 焦慮緊繃', val: 'bad', msg: '⚠️ 焦慮狀態下容易高估風險、把症狀當問題。建議先做 5 分鐘深呼吸或散步，再回來。' },
-  { label: '🔥 衝動激動', val: 'bad', msg: '⚠️ 衝動時容易跳到戰術，跳過問題定義。建議稍作冷靜後再繼續——這個工具需要你的理性腦。' },
-  { label: '😴 疲憊耗竭', val: 'bad', msg: '⚠️ 疲憊時大腦傾向最熟悉的選項，不是最好的選項。休息後再來，效果會更好。' }
-];
-
-// ── STATE ─────────────────────────────────────────────────
-let topic = '';
-let currentPhase = 0;
-let notes = {};         // { phaseIndex: { key: value } }
-let priorityItems = []; // ['', '', '', '', '']
-let selectedPriority = -1;
+// STATE
+let currentPhase = -1;
+let phaseTimer = null;
+let remaining = {};
+let running = {};
+let notes = {};
+let expanded = {};
+let soulResult = null;
+let soulTimer = null;
+let logVisible = false;
 let selectedEmo = null;
-let _timer = null;
-let timerSec = 0;
-let timerTotal = 0;
+let selectedDtype = null;
+let phaseOverride = null; // for small decision 15-min mode
 
-// ── SETUP ─────────────────────────────────────────────────
-function checkSetup() {
-  const v = document.getElementById('topicInput').value.trim();
-  document.getElementById('startBtn').disabled = v.length === 0;
-}
-
-function startApp() {
-  topic = document.getElementById('topicInput').value.trim();
-  priorityItems = ['', '', '', '', ''];
-  notes = {};
-  selectedPriority = -1;
-  selectedEmo = null;
-  currentPhase = 0;
-
-  document.getElementById('setupScreen').style.display = 'none';
-  const app = document.getElementById('appScreen');
-  app.style.display = 'block';
-
-  buildTimeline();
-  buildPhases();
-  setPhase(0);
-}
-
-// ── TIMELINE ──────────────────────────────────────────────
-function buildTimeline() {
-  const tl = document.getElementById('timeline');
-  tl.innerHTML = PHASES.map((p, i) => `<div class="tl-seg" data-i="${i}" data-jump="${i}" title="${p.title}"></div>`).join('');
-}
-
-function markTimelineDone(i) {
-  document.querySelector(`.tl-seg[data-i="${i}"]`).classList.add('done');
-}
-
-// ── PHASES BUILD ──────────────────────────────────────────
-function buildPhases() {
-  const container = document.getElementById('phases');
-  container.innerHTML = PHASES.map((p, i) => `
-    <div class="phase-card" id="pc${i}" style="--phase-color:${p.color};--phase-glow:${p.glow}">
-      <div class="phase-head" data-expand="${i}">
-        <div class="phase-badge">${i+1}</div>
-        <div class="phase-head-info">
-          <div class="phase-head-title">${p.title}</div>
-          <div class="phase-head-sub">${p.sub}</div>
-        </div>
-        <div class="phase-mins">${p.mins}m</div>
-      </div>
-      <div class="phase-body" id="pb${i}">
-        ${buildPhaseBody(p, i)}
-        <button class="phase-next" id="pnext${i}" data-next="${i}" disabled>
-          ${i < PHASES.length - 1 ? '完成，進下一階段 →' : '完成思考，查看結果 ✓'}
-        </button>
-      </div>
-    </div>
-  `).join('');
-
-  // init priority items
-  renderPriorityItems();
-}
-
-function buildPhaseBody(p, i) {
-  if (p.type === 'emotion') {
-    return `
-      <div class="emo-grid">
-        ${EMOTIONS.map(e => `<button class="emo-btn" data-val="${e.val}" data-msg="${e.msg||''}">${e.label}</button>`).join('')}
-      </div>
-      <div class="emo-warn" id="emoWarn"></div>
-    `;
+// ── SOUND ENGINE ────────────────────────────────────────────────
+let soundOn = localStorage.getItem('decisionSound') !== 'off';
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) {
+    try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch(e) { return null; }
   }
-  if (p.type === 'priority') {
-    return `
-      <p class="priority-hint" style="padding:12px 0 4px">列出手上 3–5 個待辦或選項，然後挑出最能移動指針的那一個。其他暫緩。</p>
-      <div class="priority-list" id="priorityList"></div>
-    `;
-  }
-  if (p.fields) {
-    return `<div class="sfields">${p.fields.map(f => `
-      <div class="sfield">
-        <div class="sfield-label">${f.label}</div>
-        <div class="sfield-hint">${f.hint}</div>
-        <textarea class="sfield-textarea" rows="2"
-          placeholder="${f.placeholder}"
-          data-phase="${i}" data-key="${f.key}"
-          id="f${i}_${f.key}"></textarea>
-      </div>
-    `).join('')}</div>`;
-  }
-  return '';
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function tone(freq, dur, type='sine', vol=0.12, when=0) {
+  if (!soundOn) return;
+  const ac = getAudio(); if (!ac) return;
+  const t = ac.currentTime + when;
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(vol, t + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  osc.connect(gain); gain.connect(ac.destination);
+  osc.start(t); osc.stop(t + dur + 0.05);
+}
+function chime() { // warm two-note resolve
+  tone(523.25, 0.5, 'sine', 0.10, 0);
+  tone(783.99, 0.7, 'sine', 0.09, 0.10);
+}
+function softTick() { tone(880, 0.06, 'triangle', 0.05); }
+function completeChord() {
+  tone(523.25, 0.8, 'sine', 0.09, 0);
+  tone(659.25, 0.8, 'sine', 0.08, 0.08);
+  tone(987.77, 1.0, 'sine', 0.07, 0.16);
+}
+function toggleSound() {
+  soundOn = !soundOn;
+  localStorage.setItem('decisionSound', soundOn ? 'on' : 'off');
+  const btn = document.getElementById('soundBtn');
+  if (btn) { btn.textContent = soundOn ? '🔔' : '🔕'; btn.title = soundOn ? '音效：開' : '音效：關'; }
+  if (soundOn) chime();
 }
 
-function renderPriorityItems() {
-  const list = document.getElementById('priorityList');
-  if (!list) return;
-  list.innerHTML = priorityItems.map((v, i) => `
-    <div class="priority-item ${selectedPriority===i?'selected-item':''} ${selectedPriority>=0&&selectedPriority!==i?'deprioritized':''}" id="pi${i}">
-      <textarea rows="1" placeholder="選項 ${i+1}…"
-        data-pidx="${i}"
-        class="priority-ta"
-      >${v}</textarea>
-      <div class="priority-pick" data-pick="${i}" title="選為最優先">
-        ${selectedPriority===i ? '✓' : ''}
-      </div>
-    </div>
-  `).join('');
+// ── THEME ───────────────────────────────────────────────────────
+function applyThemeBtn() {
+  const t = document.documentElement.getAttribute('data-theme') || 'dark';
+  const btn = document.getElementById('themeBtn');
+  if (btn) { btn.textContent = t === 'dark' ? '☾' : '☀'; btn.title = t === 'dark' ? '深色（點擊切換淺色）' : '淺色（點擊切換深色）'; }
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', t === 'dark' ? '#0e0d0b' : '#f4efe3');
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('decisionTheme', next);
+  applyThemeBtn();
 }
 
-function pickPriority(i) {
-  selectedPriority = selectedPriority === i ? -1 : i;
-  renderPriorityItems();
-  checkNext(2);
-}
-
-// ── PHASE LOGIC ───────────────────────────────────────────
-function setPhase(i) {
-  currentPhase = i;
-  const p = PHASES[i];
-
-  // update arc
-  document.getElementById('arcPhaseName').textContent = `階段 ${i+1}：${p.title}`;
-  document.getElementById('arcPhaseSub').textContent = p.sub;
-  document.getElementById('arcWrap').style.setProperty('--phase-tint', p.glow);
-  document.getElementById('arcCircle').style.stroke = p.color;
-  document.getElementById('arcWrap').style.setProperty('--phase-color', p.color);
-
-  // reset timer
-  clearTimer();
-  timerTotal = p.mins * 60;
-  timerSec = timerTotal;
-  renderTimer();
-
-  // update cards
-  document.querySelectorAll('.phase-card').forEach((c, j) => {
-    c.classList.toggle('active', j === i);
-    c.classList.toggle('expanded', j === i);
-  });
-
-  // scroll
-  setTimeout(() => {
-    document.getElementById(`pc${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 100);
-
-  checkNext(i);
-}
-
-function toggleExpand(i) {
-  const card = document.getElementById(`pc${i}`);
-  card.classList.toggle('expanded');
-}
-
-function jumpTo(i) {
-  if (i <= currentPhase) setPhase(i);
-}
-
-function nextPhase(i) {
-  markTimelineDone(i);
-  document.getElementById(`pc${i}`).classList.add('done');
-  clearTimer();
-
-  if (i < PHASES.length - 1) {
-    setPhase(i + 1);
-  } else {
-    showSummary();
-  }
-}
-
-// ── NOTES ─────────────────────────────────────────────────
-function saveNote(phaseIdx, key, val) {
-  if (!notes[phaseIdx]) notes[phaseIdx] = {};
-  notes[phaseIdx][key] = val;
-}
-
-function checkNext(i) {
-  const btn = document.getElementById(`pnext${i}`);
-  if (!btn) return;
-  const p = PHASES[i];
-
-  let ok = false;
-  if (p.type === 'emotion') ok = selectedEmo !== null;
-  else if (p.type === 'priority') ok = selectedPriority >= 0 && priorityItems[selectedPriority]?.trim().length > 0;
-  else if (p.fields) ok = p.fields.every(f => (notes[i]?.[f.key] || '').trim().length > 0);
-  else ok = true;
-
-  btn.disabled = !ok;
-}
-
-function selectEmo(btn, val, msg) {
+// EMOTION CHECK
+function selectEmo(btn, val) {
   document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   selectedEmo = val;
+  const warn = document.getElementById('emotionWarning');
+  const badStates = { '焦慮': '⚠️ 焦慮狀態下容易高估風險、低估自己。建議先做 5 分鐘深呼吸或散步，再回來做決定。', '疲憊': '⚠️ 疲憊時大腦傾向選擇最熟悉的選項，而非最好的選項。建議稍作休息後再繼續。', '衝動': '⚠️ 衝動狀態下容易高估收益、忽略風險。建議等情緒平復後，再用這個工具重新評估。' };
+  if (badStates[val]) { warn.textContent = badStates[val]; warn.className = 'emotion-warning visible'; }
+  else { warn.className = 'emotion-warning'; }
+}
 
-  const warn = document.getElementById('emoWarn');
-  if (msg && val !== 'ok') {
-    warn.textContent = msg;
-    warn.className = 'emo-warn vis';
+// DECISION TYPE
+function selectDtype(btn, type, mins) {
+  document.querySelectorAll('.dtype-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedDtype = type;
+  const note = document.getElementById('dtypeNote');
+  const msgs = {
+    small: '⚡ 小事決策模式：流程壓縮至 15 分鐘，每個階段時間減半。適合今天吃什麼、要不要接這個會議等日常糾結。',
+    medium: '⏱ 標準 60 分鐘流程。適合換工作、選方案、做大採購等有影響但可調整的決策。',
+    big: '🌏 重大決策建議：這個工具可以幫你整理框架與思路，但真正的重大決策（移民、婚姻、重大投資）值得花幾天甚至幾週。用此工具做初步框架，然後反覆迭代。'
+  };
+  note.textContent = msgs[type];
+  note.className = 'dtype-note visible';
+
+  // adjust phase timing for small decisions
+  if (type === 'small') {
+    phaseOverride = [5, 5, 3, 2, 0]; // minutes per phase, 0 = skip
   } else {
-    warn.className = 'emo-warn';
+    phaseOverride = null;
   }
-  checkNext(0);
+
+  // show arc + phases section
+  document.getElementById('arcSection').style.display = 'flex';
+  document.getElementById('timeline').style.display = 'flex';
+  document.getElementById('phaseContainer').style.display = 'flex';
+  buildTimeline();
+  buildPhases();
+  updateArc();
 }
 
-// ── TIMER ─────────────────────────────────────────────────
-function toggleTimer() {
-  if (_timer && _timer.isRunning()) pauseTimer(); else startTimer();
+// show emotion + dtype after typing topic
+document.getElementById('topicInput').addEventListener('input', function() {
+  const hasText = this.value.trim().length > 3;
+  document.getElementById('emotionSection').className = hasText ? 'emotion-section visible' : 'emotion-section';
+  document.getElementById('dtypeSection').className = hasText ? 'dtype-section visible' : 'dtype-section';
+});
+
+// INIT
+function init() {
+  applyThemeBtn();
+  const sb = document.getElementById('soundBtn');
+  if (sb) { sb.textContent = soundOn ? '🔔' : '🔕'; sb.title = soundOn ? '音效：開' : '音效：關'; }
+  buildTimeline();
+  buildPhases();
+  updateArc();
 }
 
-function startTimer() {
-  if (!_timer) {
-    _timer = TbxTimer({
-      onTick: (s, t) => { timerSec = s; timerTotal = t; renderTimer(); },
-      onEnd: () => { document.getElementById('arcTime').textContent = '00:00'; clearTimer(); }
+function getPhaseMin(i) {
+  if (phaseOverride && phaseOverride[i] !== undefined) return phaseOverride[i];
+  return PHASES[i].mins;
+}
+
+function buildTimeline() {
+  const tl = document.getElementById('timeline');
+  tl.innerHTML = PHASES.map((p, i) => {
+    const m = getPhaseMin(i);
+    if (m === 0) return '';
+    return `<div class="tl-seg" data-i="${i}" onclick="jumpToPhase(${i})">
+      <div class="tl-tooltip">${p.title} · ${m}分</div>
+    </div>`;
+  }).join('');
+}
+
+// ── Structured field definitions per phase ──────────────────────────────────
+function getPhaseFields(i) {
+  // phase 2 (evaluate) reads option names from phase 1 structured data
+  const opts = getOptionNames();
+  switch(i) {
+    case 0: return [
+      { key:'question', label:'決策問題', hint:'用一句話寫下你要決定的事', type:'text', rows:2 },
+      { key:'goal',     label:'目標 / 期望的結果', hint:'成功的樣子是什麼？', type:'text', rows:2 },
+      { key:'limits',   label:'限制條件', hint:'時間、金錢、關係、價值觀⋯', type:'text', rows:2 },
+    ];
+    case 1: return [
+      { key:'safe',   label:'🛡 安全方案', hint:'最穩妥、風險最低的選擇', type:'text', rows:2 },
+      { key:'risky',  label:'🚀 冒險方案', hint:'最大膽、可能回報最高的選擇', type:'text', rows:2 },
+      { key:'hybrid', label:'⚡ 混合方案', hint:'結合兩者的折衷方案', type:'text', rows:2 },
+      { key:'others', label:'其他想法（選填）', hint:'還有什麼可能性？', type:'text', rows:2 },
+    ];
+    case 2: return [
+      ...opts.map(o => ({
+        key: 'eval_'+o.key,
+        label: `評估：${o.label}`,
+        hint: '成本 / 時間 / 影響力 / 最壞情況',
+        type:'text', rows:3
+      })),
+      { key:'eliminate', label:'刪除的選項', hint:'哪些可以排除？原因是什麼？', type:'text', rows:2 },
+    ];
+    case 3: return [
+      { key:'logic',   label:'邏輯告訴我', hint:'事實、數據、理性分析說⋯', type:'text', rows:3 },
+      { key:'gut',     label:'直覺告訴我', hint:'身體的感受、本能反應是⋯', type:'text', rows:3 },
+      { key:'lean',    label:'我目前傾向', hint:'如果現在就要決定，我選⋯', type:'text', rows:2 },
+    ];
+    case 4: return [
+      { key:'decision', label:'我的最終決定', hint:'寫下來，然後大聲說出來', type:'text', rows:3 },
+      { key:'action',   label:'第一個微行動', hint:'在這個小時內可以做的一件事', type:'text', rows:2 },
+      { key:'when',     label:'預計執行時間', hint:'今天什麼時候做？', type:'text', rows:1 },
+    ];
+  }
+  return [];
+}
+
+function getOptionNames() {
+  // parse phase 1 structured data for option labels
+  const d = notes[1] || {};
+  const map = { safe:'安全方案', risky:'冒險方案', hybrid:'混合方案' };
+  return Object.entries(map).map(([key, label]) => {
+    const val = (typeof d === 'object' ? (d[key]||'').trim() : '');
+    return { key, label: val ? (val.length > 16 ? val.slice(0,16)+'…' : val) : label };
+  });
+}
+
+// Read structured notes back to plain text for summary/markdown
+function notesToText(i) {
+  const d = notes[i];
+  if (!d || typeof d !== 'object') return d || '';
+  return Object.entries(d)
+    .filter(([,v]) => v && v.trim())
+    .map(([k,v]) => {
+      const fields = getPhaseFields(i);
+      const f = fields.find(f=>f.key===k);
+      return `${f ? f.label : k}：${v}`;
+    }).join('\n');
+}
+
+function buildPhases() {
+  const c = document.getElementById('phaseContainer');
+  c.innerHTML = '';
+  PHASES.forEach((p, i) => {
+    const mins = getPhaseMin(i);
+    if (mins === 0) return;
+    const isDone = i < currentPhase;
+    const isActive = i === currentPhase;
+    const isExp = expanded[i] || isActive;
+    const rem = remaining[i] ?? mins * 60;
+    const total = mins * 60;
+    const pct = Math.round(((total - rem) / total) * 100);
+    const isWarn = isActive && rem < 60;
+    const isEditable = isActive || isDone;
+
+    const card = document.createElement('div');
+    card.className = 'phase-card' +
+      (isDone ? ' done' : '') +
+      (isActive ? ' active' : '') +
+      (isExp ? ' expanded' : '');
+    card.style.setProperty('--phase-color', p.color);
+    card.style.setProperty('--phase-glow', p.glow);
+
+    const badgeContent = isDone ? '✓' : (i + 1);
+    const fields = getPhaseFields(i);
+    const noteData = (notes[i] && typeof notes[i] === 'object') ? notes[i] : {};
+
+    // Build structured field HTML
+    const buildField = (f, idx) => {
+      const val = noteData[f.key] || '';
+      const disAttr = isEditable ? '' : 'disabled';
+      const rows = f.rows || 2;
+      return `
+        <div class="sfield">
+          <div class="sfield-label" style="color:${p.color}">${f.label}</div>
+          <div class="sfield-hint">${f.hint}</div>
+          ${rows === 1
+            ? `<input class="sfield-input" type="text" data-phase="${i}" data-key="${f.key}" value="${val.replace(/"/g,'&quot;')}" placeholder="不確定也可以先空著⋯" ${disAttr} />`
+            : `<textarea class="sfield-textarea" rows="${rows}" data-phase="${i}" data-key="${f.key}" ${disAttr} placeholder="不確定也可以先空著⋯">${val}</textarea>`
+          }
+        </div>`;
+    };
+    const primaryField = fields.length > 0 ? buildField(fields[0], 0) : '';
+    const secondaryFields = fields.slice(1).map((f,idx) => buildField(f, idx+1)).join('');
+    const hasSecondary = fields.length > 1;
+    const fieldsHtml = primaryField + (hasSecondary ? `
+      <div class="sfields-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open')">
+        <span class="sfields-toggle-icon">▶</span> 展開更多欄位（選填）
+      </div>
+      <div class="sfields-secondary">${secondaryFields}</div>` : '');
+
+    // Timer / action row
+    let actionHtml = '';
+    if (isActive) {
+      const isLast = (i === PHASES.length - 1) || (phaseOverride && i === phaseOverride.findLastIndex && false);
+      // find last non-skipped phase
+      let lastPhaseIdx = PHASES.length - 1;
+      while (lastPhaseIdx > 0 && getPhaseMin(lastPhaseIdx) === 0) lastPhaseIdx--;
+      const isLastActive = (i === lastPhaseIdx);
+
+      actionHtml = `
+        <div class="timer-section">
+          <div class="timer-bar-wrap"><div class="timer-bar-fill" id="fill${i}" style="width:${pct}%;background:${p.color}"></div></div>
+          <div class="timer-row">
+            <div class="timer-num ${isWarn?'warning':''}" id="td${i}">${fmt(rem)}</div>
+            ${!running[i]
+              ? `<button class="ctrl-btn primary" onclick="startTimer(${i})" style="background:${p.color}">▶ 開始計時</button>`
+              : `<button class="ctrl-btn" onclick="pauseTimer(${i})">⏸ 暫停</button>`
+            }
+            <button class="ctrl-btn" onclick="resetTimer(${i})">↺ 重設</button>
+            ${isLastActive
+              ? `<button class="ctrl-btn next" onclick="guardedFinish()">決策完成 ✓</button>`
+              : `<button class="ctrl-btn next" onclick="guardedNext(${i})">完成此階段 →</button>`
+            }
+          </div>
+        </div>`;
+    } else if (!isDone) {
+      actionHtml = `<div class="timer-row mt8"><button class="ctrl-btn" onclick="jumpToPhase(${i})">跳到此階段</button></div>`;
+    } else {
+      actionHtml = `<div class="timer-row mt8"><button class="ctrl-btn" onclick="jumpToPhase(${i})">重做此階段</button></div>`;
+    }
+
+    card.innerHTML = `
+      <div class="phase-head" onclick="toggleExpand(${i})">
+        <div class="phase-badge">${badgeContent}</div>
+        <div class="phase-head-info">
+          <div class="phase-head-title">${p.title}</div>
+          <div class="phase-head-sub">${p.question}</div>
+        </div>
+        <div class="phase-mins">${mins}m</div>
+        <div class="phase-chevron">▾</div>
+      </div>
+      <div class="phase-body" style="--phase-color:${p.color}">
+        <ul class="phase-tasks">${p.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
+        <div class="sfields-wrap" id="sfields${i}">${fieldsHtml}</div>
+        ${actionHtml}
+      </div>
+    `;
+    c.appendChild(card);
+  });
+
+  // Bind input events after DOM insertion
+  document.querySelectorAll('.sfield-input, .sfield-textarea').forEach(el => {
+    el.addEventListener('input', function() {
+      const pi = parseInt(this.dataset.phase);
+      const key = this.dataset.key;
+      if (!notes[pi] || typeof notes[pi] !== 'object') notes[pi] = {};
+      notes[pi][key] = this.value;
     });
+  });
+
+  updateTimeline();
+}
+
+// Guarded "complete phase" — warn if required fields empty
+function guardedNext(i) {
+  const fields = getPhaseFields(i);
+  const required = fields.filter(f => !f.key.startsWith('others') && !f.key.startsWith('eliminate') && !f.key.startsWith('when'));
+  const data = notes[i] || {};
+  const empty = required.filter(f => !(typeof data === 'object' ? data[f.key] : data) || !(typeof data === 'object' ? data[f.key] : data).trim());
+  if (empty.length > 0) {
+    const names = empty.map(f=>f.label).join('、');
+    if (!confirm(`以下欄位尚未填寫：\n${names}\n\n確定要繼續到下一階段嗎？`)) return;
   }
-  if (timerSec <= 0) timerSec = PHASES[currentPhase].mins * 60;
-  _timer.start(timerSec);
-  document.getElementById('timerBtn').textContent = '⏸ 暫停';
+  nextPhase(i);
 }
 
-function pauseTimer() {
-  if (_timer) _timer.pause();
-  document.getElementById('timerBtn').textContent = '▶ 繼續';
+function guardedFinish() {
+  const fields = getPhaseFields(4);
+  const data = notes[4] || {};
+  const decisionVal = typeof data === 'object' ? (data['decision']||'') : data;
+  if (!decisionVal.trim()) {
+    if (!confirm('「最終決定」欄位尚未填寫。\n確定要結案嗎？')) return;
+  }
+  finishAll();
 }
 
-function resetTimer() {
-  clearTimer();
-  timerSec = PHASES[currentPhase].mins * 60;
-  timerTotal = timerSec;
-  if (_timer) _timer.reset(timerSec);
-  renderTimer();
+function saveNote(i) {
+  // For structured phases, data is already saved via input events
+  // Just ensure we don't overwrite object with string
+  if (notes[i] && typeof notes[i] === 'object') return;
+  const el = document.getElementById('note'+i);
+  if (el) notes[i] = el.value;
 }
 
-function clearTimer() {
-  if (_timer) { _timer.stop(); _timer = null; }
-  document.getElementById('timerBtn').textContent = '▶ 開始計時';
+function fmt(s) {
+  const m = Math.floor(s/60);
+  const sec = s%60;
+  return `${m}:${sec.toString().padStart(2,'0')}`;
 }
 
-function renderTimer() {
-  const m = Math.floor(timerSec / 60).toString().padStart(2, '0');
-  const s = (timerSec % 60).toString().padStart(2, '0');
-  const el = document.getElementById('arcTime');
-  el.textContent = `${m}:${s}`;
-  el.classList.toggle('warning', timerSec <= 30 && timerSec > 0);
-
-  // arc
-  const pct = timerTotal > 0 ? (timerTotal - timerSec) / timerTotal : 0;
-  const circ = 138.2;
-  document.getElementById('arcCircle').style.strokeDashoffset = circ - pct * circ;
+function toggleExpand(i) {
+  if (i === currentPhase) return;
+  expanded[i] = !expanded[i];
+  buildPhases();
 }
 
-// ── SUMMARY ───────────────────────────────────────────────
+function jumpToPhase(i) {
+  clearPhaseTimer();
+  currentPhase = i;
+  if (remaining[i] === undefined) remaining[i] = getPhaseMin(i) * 60;
+  expanded = {};
+  buildPhases();
+  updateArc();
+}
+
+function startTimer(i) {
+  if (running[i]) return;
+  running[i] = true;
+  buildPhases();
+
+  // trigger soul test for phase 3
+  if (i === 3 && !soulResult) {
+    setTimeout(() => triggerSoul(), 500);
+  }
+
+  phaseTimer = setInterval(() => {
+    if (!running[i]) return;
+    remaining[i] = Math.max(0, (remaining[i] ?? getPhaseMin(i)*60) - 1);
+    const rem = remaining[i];
+    const total = getPhaseMin(i)*60;
+    const pct = Math.round(((total-rem)/total)*100);
+
+    const fill = document.getElementById('fill'+i);
+    const td = document.getElementById('td'+i);
+    if (fill) fill.style.width = pct+'%';
+    if (td) {
+      td.textContent = fmt(rem);
+      td.className = 'timer-num' + (rem < 60 ? ' warning' : '');
+    }
+    updateArc(rem, i);
+    updateTimeline(pct, i);
+
+    if (rem <= 10 && rem > 0) softTick();
+
+    if (rem <= 0) {
+      clearPhaseTimer();
+      running[i] = false;
+      chime();
+      buildPhases();
+    }
+  }, 1000);
+}
+
+function pauseTimer(i) {
+  running[i] = false;
+  clearPhaseTimer();
+  buildPhases();
+}
+
+function resetTimer(i) {
+  running[i] = false;
+  clearPhaseTimer();
+  remaining[i] = getPhaseMin(i)*60;
+  buildPhases();
+  updateArc();
+}
+
+function clearPhaseTimer() {
+  if (phaseTimer) { clearInterval(phaseTimer); phaseTimer = null; }
+}
+
+function nextPhase(i) {
+  saveNote(i);
+  clearPhaseTimer();
+  running[i] = false;
+  let next = i + 1;
+  while (next < PHASES.length && getPhaseMin(next) === 0) next++;
+  if (next >= PHASES.length) { finishAll(); return; }
+  currentPhase = next;
+  remaining[currentPhase] = getPhaseMin(currentPhase) * 60;
+  expanded = {};
+  chime();
+  buildPhases();
+  updateArc();
+  // v2：進入「做出決定」階段前觸發靈魂快選
+  if (next === 3) {
+    setTimeout(triggerSoul, 400);
+  }
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.phase-card.done');
+    if (cards.length) {
+      const last = cards[cards.length-1];
+      last.classList.add('just-done');
+      setTimeout(() => last.classList.remove('just-done'), 700);
+    }
+  }, 50);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function finishAll() {
+  saveNote(currentPhase);
+  clearPhaseTimer();
+  running[currentPhase] = false;
+  // show regret-proof overlay before committing
+  document.getElementById('regretOverlay').className = 'regret-overlay visible';
+}
+
+function confirmRegret() {
+  document.getElementById('regretOverlay').className = 'regret-overlay';
+  currentPhase = PHASES.length;
+  completeChord();
+  buildPhases();
+  showSummary();
+  saveToLog();
+}
+
+function closeRegret() {
+  document.getElementById('regretOverlay').className = 'regret-overlay';
+  // re-activate last phase so user can keep thinking
+  if (currentPhase >= PHASES.length) currentPhase = PHASES.length - 1;
+  buildPhases();
+  updateArc();
+}
+
+function saveNote(i) {
+  const el = document.getElementById('note'+i);
+  if (el) notes[i] = el.value;
+}
+
+function updateArc(rem, i) {
+  const phase = i ?? currentPhase;
+  if (phase < 0 || phase >= PHASES.length) {
+    document.getElementById('arcTime').textContent = '—:——';
+    document.getElementById('arcPhaseName').textContent = currentPhase >= PHASES.length ? '決策完成！' : '尚未開始';
+    document.getElementById('arcPhaseSub').textContent = currentPhase >= PHASES.length ? '查看下方摘要' : '請填寫主題後開始';
+    return;
+  }
+  const p = PHASES[phase];
+  const total = getPhaseMin(phase)*60;
+  const r = rem ?? remaining[phase] ?? total;
+  const pct = (total-r)/total;
+  const circ = 213.6;
+  const offset = circ - pct*circ;
+
+  const arc = document.getElementById('arcCircle');
+  arc.style.strokeDashoffset = offset;
+  // tint the gradient + ambient glow to the phase color
+  setPhaseTint(p.color);
+  document.getElementById('arcTime').textContent = fmt(r);
+  document.getElementById('arcTime').style.color = r < 60 ? 'var(--red-solid)' : p.color;
+  document.getElementById('arcPhaseName').textContent = `階段 ${phase+1}：${p.title}`;
+  document.getElementById('arcPhaseSub').textContent = p.question;
+}
+
+// Shift the arc gradient + ambient page glow toward the active phase color
+function setPhaseTint(color) {
+  const grad = document.getElementById('arcGrad');
+  if (grad) {
+    const stops = grad.querySelectorAll('stop');
+    if (stops[0]) stops[0].setAttribute('stop-color', color);
+    if (stops[1]) stops[1].setAttribute('stop-color', shade(color, -22));
+  }
+  const tint = hexToRgba(color, 0.10);
+  const arcSec = document.getElementById('arcSection');
+  if (arcSec) arcSec.style.setProperty('--phase-tint', tint);
+  document.documentElement.style.setProperty('--phase-tint', tint);
+}
+
+function hexToRgba(hex, a) {
+  const h = hex.replace('#','');
+  const n = parseInt(h.length === 3 ? h.split('').map(c=>c+c).join('') : h, 16);
+  return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`;
+}
+function shade(hex, pct) {
+  const h = hex.replace('#','');
+  const n = parseInt(h.length === 3 ? h.split('').map(c=>c+c).join('') : h, 16);
+  let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  const f = (c)=>Math.max(0,Math.min(255,Math.round(c + (pct/100)*255)));
+  return `#${((1<<24)+(f(r)<<16)+(f(g)<<8)+f(b)).toString(16).slice(1)}`;
+}
+
+function updateTimeline(pct, activeI) {
+  document.querySelectorAll('.tl-seg').forEach((seg, i) => {
+    seg.className = 'tl-seg';
+    if (i < currentPhase) seg.classList.add('done');
+    else if (i === currentPhase) {
+      seg.classList.add('active');
+      seg.style.setProperty('--pct', (pct??0)+'%');
+    }
+  });
+}
+
+// SOUL TEST
+function triggerSoul() {
+  const overlay = document.getElementById('soulOverlay');
+  const optsEl = document.getElementById('soulOptions');
+
+  // Pull from structured phase 1 options
+  const opts = getOptionNames();
+  const optionTexts = opts.map(o => o.label).filter(l => l && l.length > 1);
+  const choices = optionTexts.length >= 2 ? optionTexts : ['方案一', '方案二', '方案三'];
+
+  optsEl.innerHTML = choices.map(o =>
+    `<button class="soul-opt" onclick="pickSoul('${o.replace(/'/g,"&#39;")}')">${o.length > 24 ? o.slice(0,24)+'…' : o}</button>`
+  ).join('') + `<button class="soul-opt" onclick="pickSoul('我還不確定')">我還不確定</button>`;
+
+  overlay.classList.add('visible');
+
+  let count = 5;
+  document.getElementById('soulCountdown').textContent = count;
+  soulTimer = setInterval(() => {
+    count--;
+    document.getElementById('soulCountdown').textContent = count;
+    if (count <= 0) {
+      clearInterval(soulTimer);
+      closeSoul();
+    }
+  }, 1000);
+}
+
+function pickSoul(val) {
+  soulResult = val;
+  clearInterval(soulTimer);
+  // Store into structured notes for phase 3
+  if (!notes[3] || typeof notes[3] !== 'object') notes[3] = {};
+  notes[3]['lean'] = (notes[3]['lean'] ? notes[3]['lean'] + '\n' : '') + `[靈魂快選]：${val}`;
+  closeSoul();
+  // Refresh phase 3 field if currently visible
+  const leanEl = document.querySelector('.sfield-textarea[data-phase="3"][data-key="lean"]');
+  if (leanEl) leanEl.value = notes[3]['lean'];
+}
+
+function closeSoul() {
+  clearInterval(soulTimer);
+  document.getElementById('soulOverlay').classList.remove('visible');
+}
+
+// SUMMARY
 function showSummary() {
-  document.getElementById('appScreen').style.display = 'none';
-  const s = document.getElementById('summaryScreen');
-  s.style.display = 'block';
+  const topic = document.getElementById('topicInput').value || '（未填寫）';
+  document.getElementById('sT').textContent = topic;
+  PHASES.forEach((_, i) => {
+    const txt = notesToText(i);
+    document.getElementById('sN'+i).textContent = txt || '（未填寫）';
+  });
+  document.getElementById('summarySection').className = 'summary-section visible';
+  document.getElementById('summarySection').scrollIntoView({behavior:'smooth'});
+}
 
-  document.getElementById('summaryTitle').textContent = `「${topic}」策略快照`;
+function copyMarkdown() {
+  const topic = document.getElementById('topicInput').value || '（未填寫）';
+  const date = new Date().toLocaleDateString('zh-TW');
+  const emoLine = selectedEmo ? `\n> 決策前狀態：${selectedEmo}` : '';
+  const dtypeLine = selectedDtype ? ` | 決策類型：${{small:'小事（15分鐘版）',medium:'中型（60分鐘版）',big:'重大決策'}[selectedDtype]}` : '';
+  const sections = PHASES.map((p, i) => `## ${String(i+1).padStart(2,'0')} ${p.title}\n${notesToText(i)||'（未填寫）'}`).join('\n\n');
+  const md = `# 決策紀錄：${topic}\n\n> 日期：${date}${dtypeLine}${emoLine}\n\n${sections}\n\n---\n*由 1小時決策法 生成 · 已完成後悔確認*`;
+  navigator.clipboard.writeText(md).then(() => showToast('已複製 Markdown ✓'));
+}
 
-  const cards = [];
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
 
-  // emotion
-  const emoLabel = EMOTIONS.find(e => e.val === selectedEmo)?.label || '';
-  cards.push({ label: '出發狀態', content: emoLabel });
+// LOG
+function saveToLog() {
+  const topic = document.getElementById('topicInput').value || '（未填寫）';
+  const d4 = notes[4];
+  const decision = (d4 && typeof d4 === 'object' ? d4['decision'] : d4) || '（未填寫）';
+  const date = new Date().toLocaleDateString('zh-TW');
+  const log = JSON.parse(localStorage.getItem('decisionLog') || '[]');
+  log.unshift({ date, topic, decision: decision.slice(0,80), notes: JSON.parse(JSON.stringify(notes)) });
+  if (log.length > 20) log.pop();
+  localStorage.setItem('decisionLog', JSON.stringify(log));
+  renderLog();
+}
 
-  // zoom out
-  const z = notes[1] || {};
-  if (z.q1 || z.q2 || z.q3) {
-    cards.push({ label: 'Zoom Out 三問', content: [
-      z.q1 ? `問題：${z.q1}` : '',
-      z.q2 ? `為誰：${z.q2}` : '',
-      z.q3 ? `為何現在：${z.q3}` : ''
-    ].filter(Boolean).join('\n') });
+function renderLog() {
+  const log = JSON.parse(localStorage.getItem('decisionLog') || '[]');
+  const list = document.getElementById('logList');
+  if (log.length === 0) {
+    list.innerHTML = '<div class="log-empty">還沒有決策記錄</div>';
+    return;
   }
-
-  // priority
-  if (selectedPriority >= 0 && priorityItems[selectedPriority]) {
-    const all = priorityItems.filter(v => v.trim());
-    cards.push({ label: '最優先行動', content: `✦ ${priorityItems[selectedPriority]}\n\n暫緩：${all.filter((_, i) => i !== selectedPriority).filter(v=>v).map(v=>`· ${v}`).join('  ')}` });
-  }
-
-  // sentence
-  const sent = notes[3]?.strategy;
-  if (sent) cards.push({ label: '一句話策略', content: sent });
-
-  document.getElementById('summaryCards').innerHTML = cards.map(c => `
-    <div class="summary-card">
-      <div class="summary-card-label">${c.label}</div>
-      <div class="summary-card-content">${c.content}</div>
+  list.innerHTML = log.map((l, i) => `
+    <div class="log-item" onclick="loadLog(${i})">
+      <div class="log-date">${l.date}</div>
+      <div>
+        <div class="log-topic">${l.topic}</div>
+        <div class="log-decision">${l.decision}</div>
+      </div>
     </div>
   `).join('');
 }
 
-function buildMarkdown() {
-  const now = new Date().toISOString().slice(0, 10);
-  const emoLabel = EMOTIONS.find(e => e.val === selectedEmo)?.label || '';
-  const z = notes[1] || {};
-  const sent = notes[3]?.strategy || '';
-  const topItem = selectedPriority >= 0 ? priorityItems[selectedPriority] : '';
-  const restItems = priorityItems.filter((v, i) => v.trim() && i !== selectedPriority).map(v => `- 暫緩：${v}`).join('\n');
-
-  return `---
-title: "策略快照：${topic}"
-date: ${now}
-type: strategy-snapshot
-tags:
-  - 策略思考
-  - 工具輸出
----
-
-# 策略快照：${topic}
-
-**出發狀態**：${emoLabel}
-
-## Zoom Out 三問
-- **問題**：${z.q1 || '（未填）'}
-- **為誰**：${z.q2 || '（未填）'}
-- **為何現在**：${z.q3 || '（未填）'}
-
-## 最優先行動
-✦ ${topItem || '（未選）'}
-
-${restItems}
-
-## 一句話策略
-> ${sent || '（未填）'}
-
----
-*由謙謙爸策略思考引導器產出 · ${now}*
-`;
+function loadLog(i) {
+  const log = JSON.parse(localStorage.getItem('decisionLog') || '[]');
+  const entry = log[i];
+  if (!entry) return;
+  document.getElementById('topicInput').value = entry.topic;
+  notes = {...entry.notes};
+  currentPhase = PHASES.length;
+  buildPhases();
+  showSummary();
 }
 
-function copyMarkdown() {
-  const md = buildMarkdown();
-  navigator.clipboard.writeText(md).then(() => {
-    const btn = document.querySelector('.copy-btn');
-    btn.textContent = '已複製 ✓';
-    setTimeout(() => btn.textContent = '複製 Markdown ↗', 2000);
-  });
+function clearLog() {
+  if (!confirm('確定要清除所有決策記錄？')) return;
+  localStorage.removeItem('decisionLog');
+  renderLog();
 }
 
-function restart() {
-  document.getElementById('summaryScreen').style.display = 'none';
-  document.getElementById('setupScreen').style.display = 'block';
+function toggleLog() {
+  logVisible = !logVisible;
+  document.getElementById('logSection').style.display = logVisible ? 'block' : 'none';
+  if (logVisible) renderLog();
+}
+
+function resetAll() {
+  clearPhaseTimer();
+  currentPhase = -1;
+  remaining = {};
+  running = {};
+  notes = {};
+  expanded = {};
+  soulResult = null;
+  phaseOverride = null;
+  selectedEmo = null;
+  selectedDtype = null;
   document.getElementById('topicInput').value = '';
-  document.getElementById('startBtn').disabled = true;
+  document.getElementById('summarySection').className = 'summary-section';
+  document.getElementById('emotionSection').className = 'emotion-section';
+  document.getElementById('dtypeSection').className = 'dtype-section';
+  document.querySelectorAll('.emo-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.dtype-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('emotionWarning').className = 'emotion-warning';
+  document.getElementById('dtypeNote').className = 'dtype-note';
+  buildPhases();
+  updateArc();
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
-// ── THEME ─────────────────────────────────────────────────
-function toggleTheme() { TbxTheme.toggle(); }
-
-TbxTheme.restore();
-
-// ── EVENT LISTENERS（替代所有 inline handlers）──────────────
-document.addEventListener('DOMContentLoaded', () => {
-
-  // 靜態元素
-  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
-  document.getElementById('topicInput').addEventListener('input', checkSetup);
-  document.getElementById('startBtn').addEventListener('click', startApp);
-  document.getElementById('timerBtn').addEventListener('click', toggleTimer);
-  document.getElementById('resetBtn').addEventListener('click', resetTimer);
-  document.getElementById('copyBtn').addEventListener('click', copyMarkdown);
-  document.getElementById('restartBtn').addEventListener('click', restart);
-
-  // 事件委派：timeline jump
-  document.getElementById('timeline').addEventListener('click', e => {
-    const seg = e.target.closest('[data-jump]');
-    if (seg) jumpTo(parseInt(seg.dataset.jump));
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js?v=2.0').catch(function(){});
   });
+}
 
-  // 事件委派：phase head expand / next
-  document.getElementById('phases').addEventListener('click', e => {
-    const expand = e.target.closest('[data-expand]');
-    if (expand) { toggleExpand(parseInt(expand.dataset.expand)); return; }
-    const next = e.target.closest('[data-next]');
-    if (next) { nextPhase(parseInt(next.dataset.next)); return; }
-    const pick = e.target.closest('[data-pick]');
-    if (pick) { pickPriority(parseInt(pick.dataset.pick)); return; }
-    const emo = e.target.closest('[data-val]');
-    if (emo) { selectEmo(emo, emo.dataset.val, emo.dataset.msg); return; }
-  });
-
-  // 事件委派：phase 文字輸入（sfield-textarea）
-  document.getElementById('phases').addEventListener('input', e => {
-    const sf = e.target.closest('[data-phase][data-key]');
-    if (sf) {
-      saveNote(parseInt(sf.dataset.phase), sf.dataset.key, sf.value);
-      checkNext(parseInt(sf.dataset.phase));
-      return;
-    }
-    const pi = e.target.closest('[data-pidx]');
-    if (pi) {
-      priorityItems[parseInt(pi.dataset.pidx)] = pi.value;
-      checkNext(2);
-      return;
-    }
-  });
-
-  // priority textarea focus（自動展開高度）
-  document.getElementById('phases').addEventListener('focusin', e => {
-    if (e.target.classList.contains('priority-ta')) {
-      e.target.style.minHeight = '22px';
-    }
-  });
-
-});
+init();
 </script>
 </body>
 </html>
